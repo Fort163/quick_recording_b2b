@@ -1,0 +1,22 @@
+.work-place{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 80%;
+    overflow: hidden;
+}
+
+
+.placer-enter-active,.placer-leave-active {
+    transition: all .5s;
+}
+
+.placer-enter {
+    opacity: .5;
+    transform: translateX(100%);
+}
+
+.placer-leave-to {
+    opacity: .5;
+    transform: translateX(-100%);
+}

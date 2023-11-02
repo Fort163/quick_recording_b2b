@@ -1,0 +1,29 @@
+.mainMyCompany{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+}
+
+.menuMyCompany{
+    display: flex;
+    width: 20%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.myCompanyButton{
+    height: 25% !important;
+    margin-top: 10px;
+    background-color: #dde0e0 !important;
+    max-height: 200px !important;
+    border-radius: 0px !important;
+}
+
+.tableMyCompany{
+    display: flex;
+    width: 80%;
+    height: 100%;
+    flex-direction: column;
+}
+

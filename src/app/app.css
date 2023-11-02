@@ -1,0 +1,138 @@
+.main-login{
+    font-family: verdana;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    height: 100%;
+    width: 100%;
+}
+
+.main-work{
+    font-family: verdana;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items:center;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    cursor: pointer;
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+    -webkit-appearance:none;
+}
+
+.main-size{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+/*
+All application class
+ */
+
+.button-default{
+    border: none;
+    min-width: 120px;
+    max-width: 350px;
+    min-height: 50px;
+    max-height: 50px;
+    color: #1E98FF;
+    background-color: white;
+    font-family: cursive;
+    font-size: 25px;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    cursor: pointer;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.button-default-press{
+    background-color: #1E98FF !important;
+    color: ghostwhite;
+    border-radius: 25px;
+    box-shadow:0 0 30px #7bbfe9;
+}
+
+.button-default:hover{
+    background-color: #1E98FF !important;
+    color: ghostwhite;
+    border-radius: 25px;
+    box-shadow:0 0 30px #7bbfe9;
+}
+
+.button-danger{
+    border: none;
+    min-width: 120px;
+    max-width: 350px;
+    min-height: 50px;
+    max-height: 50px;
+    color: #ff1032;
+    background-color: white;
+    font-family: cursive;
+    font-size: 25px;
+    padding-left: 40px;
+    padding-right: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.button-danger:hover{
+    background-color: #ff1032 !important;
+    color: ghostwhite;
+    border-radius: 25px;
+    box-shadow:0 0 30px #ff6f83;
+}
+
+.text-field{
+    width: 80%;
+    min-height: 65px;
+    font-size: 30px;
+    font-family: cursive;
+    color: dodgerblue;
+    border: none;
+    border-bottom: 2px groove dodgerblue;
+}
+
+.text-field:focus{
+    outline: none;
+}
+
+.h-layout{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}
+
+.v-layout{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}

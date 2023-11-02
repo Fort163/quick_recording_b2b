@@ -1,0 +1,77 @@
+.combobox-label{
+    overflow: hidden;
+    text-wrap: initial;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    top: 15px;
+}
+
+.combobox{
+    margin: 0 20px 0 20px;
+    box-shadow: 5px 5px 5px 5px #d6e1ec;
+    background-color:white;
+    border: 0px;
+    border-radius: 0px;
+    width: 100%;
+    height: 100%;
+    font-family: cursive;
+    font-size: 1.2em;
+    text-align-last: center;
+    cursor: pointer;
+}
+
+.combobox:focus{
+    outline: none;
+}
+
+.combobox:hover{
+    box-shadow: 0 2px 0 3px #d3e3ef;
+    border-radius: 0px;
+}
+
+.combobox-ul{
+    position: relative;
+    padding-top: 34px;
+    right: 25px;
+}
+
+.comboAnimation-enter-active{/*, .comboAnimation-leave-active {*/
+    transition: all 0.5s;
+}
+
+.comboAnimation-enter{/*, .comboAnimation-leave-to {*/
+    opacity: 0.3;
+    transform: translateY(-50%);
+}
+
+.li-combobox{
+    width: 100%;
+    border-radius: 0px;
+    min-height: 50px;
+    max-height: 80px;
+    margin: 0px;
+    list-style-type: none;
+    word-break: break-word;
+    overflow: hidden;
+}
+.first{
+    border: 2px solid #1E98FF;
+    border-top: 0px;
+    border-bottom: 1px solid #1E98FF;
+    background-color: white;
+}
+
+.first:hover{
+    color: white;
+    background-color: #1E98FF;
+}
+
+.second{
+    background-color: #f8f6f6;
+}
+
+.second:hover{
+    background-color: #b1b0b0;
+    box-shadow: 0 5px 0 3px #888888;
+}

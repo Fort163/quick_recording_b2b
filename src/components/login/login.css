@@ -1,0 +1,38 @@
+
+.google-button {
+    width: 99px;
+    height: 33px;
+    border: none;
+    background-color: white;
+    background-image: url(../../assets/login/google_33.png);
+    padding-bottom: 4px;
+    margin: 10px;
+}
+
+.google-button:hover{
+    background-color: #cbf4ff;
+    border-radius: 10px;
+    box-shadow:0 0 30px rgb(153, 231, 252);
+}
+.yandex-button {
+    width: 83px;
+    height: 33px;
+    border: none;
+    background-color: white;
+    background-image: url(../../assets/login/yandex_33.png);
+    margin: 10px;
+}
+
+.yandex-button:hover{
+    background-color: #ffcfcf;
+    border-radius: 10px;
+    box-shadow:0 0 30px rgb(252, 153, 165);
+}
+
+.yandex-button:focus{
+    outline: none;
+}
+
+.google-button:focus{
+    outline: none;
+}

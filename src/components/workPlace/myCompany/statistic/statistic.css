@@ -1,0 +1,21 @@
+.mainStatistic{
+    margin-top: 5px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.mainStatistic-search{
+    margin-top: 10px;
+    width: 100%;
+    height: 200px;
+    min-height: 200px;
+}
+
+.mainStatistic-table{
+    margin-top: 15px;
+    width: 100%;
+    height: calc(100% - 200px);
+}

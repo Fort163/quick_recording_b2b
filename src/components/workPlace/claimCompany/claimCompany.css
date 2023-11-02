@@ -1,0 +1,20 @@
+.infoMessage{
+    margin: 20px;
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    max-height: 50px;
+}
+
+.imageAnim{
+    animation: imageShake 15.0s infinite ;
+}
+
+@keyframes imageShake {
+    50% {
+        transform: translateX(-150%)
+    }
+    50% {
+        transform: translateX(150%)
+    }
+}
