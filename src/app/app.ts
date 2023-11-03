@@ -12,6 +12,7 @@ import ModalMask from "@/components/modal/mask/ModalMask.vue";
 import {FastWebWS} from "@/components/api/ws/fastWebWS.ts";
 import BottomMenu from "@/components/bottomMenu/BottomMenu.vue";
 import VueCookies from "vue-cookies";
+import axios from "axios";
 
 Vue.use(Vuex);
 Vue.use(VueCookies);
@@ -37,6 +38,30 @@ export default class App extends Vue {
         }, err => {
             console.error("Position user not set");
         })
+        const params = new URLSearchParams(document.location.search)
+        const code = params.get("code")
+        if(code){
+            const payload = new FormData()
+            payload.append('grant_type', 'authorization_code')
+            payload.append('code', code)
+            payload.append('redirect_uri', process.env.VUE_APP_OAUTH_REDIRECT_URI)
+            payload.append('client_id', process.env.VUE_APP_OAUTH_CLIENT_ID)
+            return axios.post('/oauth2/token', payload, {
+                    headers: {
+                        'Content-type': 'application/url-form-encoded',
+                        'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                    }
+                }
+            ).then(response => {
+
+                // получаем токены, кладем access token в LocalStorage
+                console.warn("Result getting tokens: " + response.data)
+            })
+        }
+        else {
+            document.location.href = this.createUrl(process.env.VUE_APP_OAUTH_QR);
+        }
+
         const accessToken = this.$cookies.get("access_token");
         if (accessToken) {
             this.$store.commit('login',accessToken);
@@ -74,6 +99,16 @@ export default class App extends Vue {
 
     get isAuthorized() : boolean {
         return this.state.loginModel.accessToken!=null;
+    }
+
+    private createUrl(oauthUrl: string): string {
+        const requestParams = new URLSearchParams({
+            response_type: "code",
+            client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
+            redirect_uri: process.env.VUE_APP_OAUTH_REDIRECT_URI,
+            scope: 'read.scope write.scope'
+        });
+        return process.env.VUE_APP_BASE_URL_SSO + oauthUrl +'?'+ requestParams;
     }
 
 }
