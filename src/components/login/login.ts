@@ -7,6 +7,27 @@ import Vue from "vue";
 })
 export default class Login extends Vue {
 
+    /*created(){
+        let payload = new FormData()
+        payload.append('grant_type', 'authorization_code')
+        payload.append('code', code)
+        payload.append('redirect_uri', redirectUri)
+        payload.append('client_id', clientId)
+
+        return axios.post('/oauth2/token', payload, {
+                headers: {
+                    'Content-type': 'application/url-form-encoded',
+                    'Authorization': authHeaderValue
+                }
+            }
+        ).then(response => {
+
+            // получаем токены, кладем access token в LocalStorage
+            console.log("Result getting tokens: " + response.data)
+            window.sessionStorage.setItem(ACCESS_TOKEN_KEY, response.data[ACCESS_TOKEN_KEY]);
+        })
+    }*/
+
     public tryLoginGoogle() {
         window.location.href = this.createUrl(process.env.VUE_APP_OAUTH_GOOGLE);
     }

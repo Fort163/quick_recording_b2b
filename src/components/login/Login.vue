@@ -8,7 +8,6 @@
     -->
     <button class="google-button" @click="tryLoginGoogle()"></button>
     <button class="yandex-button" @click="tryLoginYandex()"></button>
-    <button class="search-button" @click="tryLoginQR()"></button>
     <!--
         WORK
         <button class="google-button" @click="tryLogin('https://quick-peter-b2b.ru/oauth2/authorize/google?redirect_uri=https://quick-peter-b2c.ru')"></button>

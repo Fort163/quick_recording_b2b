@@ -31,6 +31,10 @@ export default class App extends Vue {
     @Provide('api') mainApi: FastWebApi = new FastWebApi("accessToken",this.$store);
     @Provide('socket') mainSocket: FastWebWS = new FastWebWS("accessToken",this.$store);
 
+    private token : string | null = null
+    private access_token : string | null = null
+    private token_info : string | null = null
+
     mounted(){
         console.log(process.env);
         navigator.geolocation.getCurrentPosition((pos : GeolocationPosition) => {
@@ -42,27 +46,33 @@ export default class App extends Vue {
         const code = params.get("code")
         if(code){
             const payload = new FormData()
+
             payload.append('grant_type', 'authorization_code')
             payload.append('code', code)
             payload.append('redirect_uri', process.env.VUE_APP_OAUTH_REDIRECT_URI)
             payload.append('client_id', process.env.VUE_APP_OAUTH_CLIENT_ID)
-            return axios.post('/oauth2/token', payload, {
+            return axios.post(process.env.VUE_APP_BASE_URL_SSO + '/oauth2/token', payload, {
                     headers: {
                         'Content-type': 'application/url-form-encoded',
                         'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
                     }
                 }
             ).then(response => {
+                console.warn(response.data)
+                this.access_token = response.data.access_token
+                this.token = JSON.stringify(response.data)
 
-                // получаем токены, кладем access token в LocalStorage
-                console.warn("Result getting tokens: " + response.data)
             })
         }
         else {
-            document.location.href = this.createUrl(process.env.VUE_APP_OAUTH_QR);
+            const error = params.get("error")
+            if(!error) {
+                document.location.href = this.createUrl(process.env.VUE_APP_OAUTH_QR);
+            }
         }
 
-        const accessToken = this.$cookies.get("access_token");
+
+        /*const accessToken = this.$cookies.get("access_token");
         if (accessToken) {
             this.$store.commit('login',accessToken);
             this.api.accessToken = accessToken;
@@ -74,7 +84,7 @@ export default class App extends Vue {
             this.socket.connect();
             this.$cookies.remove("access_token");
             window.history.replaceState({}, document.title, process.env.VUE_APP_BASE_URL_B2B);
-        }
+        }*/
     }
 
     set api( api : FastWebApi) {
@@ -101,12 +111,29 @@ export default class App extends Vue {
         return this.state.loginModel.accessToken!=null;
     }
 
+    public info(){
+        if(this.access_token){
+            const payload = new FormData();
+            payload.append('token', this.access_token)
+            return axios.post(process.env.VUE_APP_BASE_URL_SSO + '/oauth2/token-info', payload, {
+                headers: {
+                    'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                }
+            }).then(result => {
+                this.token_info = result.data;
+            })
+                .catch((err) => {
+
+                });
+        }
+    }
+
     private createUrl(oauthUrl: string): string {
         const requestParams = new URLSearchParams({
             response_type: "code",
             client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
             redirect_uri: process.env.VUE_APP_OAUTH_REDIRECT_URI,
-            scope: 'read.scope write.scope'
+            scope: "read.scope write.scope"
         });
         return process.env.VUE_APP_BASE_URL_SSO + oauthUrl +'?'+ requestParams;
     }
