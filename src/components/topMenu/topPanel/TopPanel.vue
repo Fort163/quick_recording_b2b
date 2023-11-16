@@ -1,7 +1,6 @@
 <template>
   <div class="topPanel">
-    <TopMenu></TopMenu>
-    <TopLogin></TopLogin>
+
   </div>
 </template>
 

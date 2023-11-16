@@ -5,6 +5,6 @@ import Vue from "vue";
     components: {
     }
 })
-export default class TopPanel extends Vue {
+export default class BottomBar extends Vue {
 
 }
