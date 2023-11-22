@@ -1,0 +1,36 @@
+.button-image{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 60% 60%;
+    border: none;
+    box-shadow: 2px 2px 10px #174969;
+    margin: 3px;
+    cursor: pointer;
+    width: var(--button-width);
+    min-width: var(--button-min-width);
+    min-height: var(--button-min-height);
+    height: var(--button-height);
+    background-color: var(--button-background-color);
+    background-image: var(--button-background-image);
+    border-radius: var(--button-border-radius);
+}
+
+.button-image:hover{
+    background-color: var(--button-background-color--hover);
+    box-shadow: var(--button-box-shadow--hover);
+}
+
+.button-label{
+    position: fixed;
+    margin: -15px;
+    color: #585757;
+    font-size: medium;
+    z-index: 5;
+}
+
+.main-button{
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    font-size: large;
+}

@@ -1,8 +1,109 @@
 .topPanel{
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 90%;
+    margin: auto;
     height: 10%;
     min-height: 80px;
     max-height: 80px;
+}
+
+.logo{
+    padding: 5px;
+    position: absolute;
+    width: 200px;
+    left: 5%;
+    pointer-events: none;
+}
+
+.user-info{
+    display: flex;
+    width: 10%;
+    height: auto;
+    margin: auto;
+    cursor: pointer;
+}
+
+.userpic{
+    width: 50px;
+    border-radius: 30px;
+    border: 1px solid #3b8abe;
+}
+
+.user-info-bar-window{
+    position: absolute;
+    z-index: 200;
+    width: 13%;
+    height: 30%;
+    margin-top: 30px;
+    margin-left: 80%;
+}
+
+.user-info-bar{
+    width: 100%;
+    height: 100%;
+    box-shadow: 2px 2px 20px rgb(15, 151, 236);
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info-bar-label{
+    text-align: center;
+    font-size: large;
+    width: 80%;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    cursor: inherit;
+}
+
+.user-info-bar-item{
+    display: flex;
+    width: 100%;
+    height: 20%;
+    border-bottom: 1px solid #3b8abe;
+    box-shadow: 1px 0px 5px rgb(15, 151, 236);
+    cursor: pointer;
+}
+
+.user-info-bar-item:hover{
+    background-color: #57b4ee;
+}
+
+.user-info-bar-item:hover img{
+    width: 40px;
+}
+
+.user-info-bar-icon{
+    margin: auto;
+    width: 25px;
+}
+
+.user-info-bar-enter-active{
+    transition: all .3s;
+}
+
+.user-info-bar-leave-active {
+    transition: all .3s;
+}
+
+.user-info-bar-enter{
+    opacity: .3;
+    transform: translateX(50%);
+}
+
+.user-info-bar-leave-to {
+    opacity: .3;
+    transform: translateX(50%);
+}
+
+@media screen and (max-width: 1500px) {
+    img.logo {
+        width: 100px;
+    }
+}
+
+@media screen and (max-width: 1700px) {
+    div.user-info {
+        margin-right: 10%;
+    }
 }

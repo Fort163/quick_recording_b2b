@@ -26,12 +26,13 @@ export class ApiB2B implements Api{
         this._URL = value;
     }
 
-    getApi<T>(uri: string, map?: Map<string, Object>): Promise<T> {
+    getApi<T>(uri: string, param?: URLSearchParams): Promise<T> {
         this.loadMask(true);
-        if (map) {
-            uri = this.addParameterToUri(uri,map);
+        let url = this._URL + uri;
+        if(param){
+            url = url.concat('?' + param)
         }
-        return axios.get(this._URL + uri)
+        return axios.get(url)
             .then((response: any) => {
                     this.loadMask(false);
                     return response.data;
@@ -102,7 +103,7 @@ export class ApiB2B implements Api{
 
     public init(){
         axios.interceptors.request.use(function (config) {
-            const provider = AuthProvider.getProvider()
+            const provider = AuthProvider.init()
             const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
             config.headers.Authorization =  token;
             return config;
@@ -114,16 +115,6 @@ export class ApiB2B implements Api{
         this.store.commit('setLoadMask', new class implements LoadMask {
             show: boolean = value;
         });
-    }
-
-    private addParameterToUri(uri: string, map: Map<string, Object>): string {
-        uri = uri.concat('?')
-        for (const item of map.keys()) {
-            uri = uri.concat(item, '=', map.get(item)?.toString() || '')
-            uri = uri.concat('&')
-        }
-        uri = uri.substring(0, uri.length - 1)
-        return uri;
     }
 
 }

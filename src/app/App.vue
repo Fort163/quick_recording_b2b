@@ -3,9 +3,7 @@
     <ModalMask/>
     <TopPanel/>
     <ScrollMenu/>
-    <transition name="component">
-      <router-view></router-view>
-    </transition>
+    <WorkPlace/>
     <BottomBar/>
   </div>
 </template>

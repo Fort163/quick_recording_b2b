@@ -28,8 +28,48 @@ export interface AuthToken {
     scope : string
 }
 
-export interface UserInfo{
+export interface Authority{
+    authority : string
+}
 
+export interface UserInfo{
+    authorities : Array<Authority>,
+    name : string,
+    fullName: string,
+    userpic : string,
+    email: string,
+    gender: string,
+    phoneNumber: string,
+    birthDay: string
+}
+
+export class UserInfoChange{
+
+    firstName : string
+    lastName : string
+    picture : FileUpload | null
+    email: string | null
+    gender: string
+    phoneNumber: string | null
+    birthDay: string | null
+
+    constructor(info : UserInfo) {
+        const strings = info.fullName.split(' ');
+        this.firstName = strings[0]
+        this.lastName = strings[1]
+        this.picture = null
+        this.gender = info.gender
+        this.phoneNumber = info.phoneNumber
+        this.birthDay = info.birthDay
+        this.email = info.email
+    }
+
+}
+
+export interface FileUpload {
+    fileBase64 : String,
+    fileName : String,
+    size : number
 }
 
 export interface Authorization {

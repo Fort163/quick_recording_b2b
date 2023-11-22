@@ -1,8 +1,7 @@
 .bottom-bar-main{
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 70%;
     height: 5%;
-    padding-left: 70px;
-    padding-right: 70px;
+    margin: auto;
 }

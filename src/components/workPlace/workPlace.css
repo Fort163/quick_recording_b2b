@@ -1,24 +1,31 @@
 .work-place{
     display: flex;
-    flex-direction: row;
-    padding-left: 70px;
-    padding-right: 70px;
-    width: 100%;
+    flex-direction: column;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
     height: 85%;
     overflow: hidden;
+    z-index: 5;
 }
 
 
-.placer-enter-active,.placer-leave-active {
-    transition: all .5s;
+.work-place-enter-active,.work-place-leave-active {
+    transition: all .3s;
 }
 
-.placer-enter {
+.work-place-enter {
     opacity: .5;
-    transform: translateX(100%);
+    transform: translateX(50%);
 }
 
-.placer-leave-to {
+.work-place-leave-to {
     opacity: .5;
-    transform: translateX(-100%);
+    transform: translateX(-50%);
+}
+
+@media screen and (max-width: 1500px) {
+    div.work-place {
+        width: 100%;
+    }
 }

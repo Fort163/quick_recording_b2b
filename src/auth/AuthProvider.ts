@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import {Authorization, AuthToken, ModalWindow, UserInfo} from "@/store/model";
+import {control} from "yandex-maps";
 
 export class AuthProvider{
 
@@ -10,7 +11,7 @@ export class AuthProvider{
     private code : string | null = null;
     private static provider : AuthProvider;
 
-    public static getProvider() : AuthProvider {
+    public static init() : AuthProvider {
         if(!this.provider){
             this.provider = new AuthProvider();
         }
@@ -18,7 +19,11 @@ export class AuthProvider{
     }
 
     private constructor() {
-        if(!this.token) {
+
+    }
+
+    private createCode(): Promise<string>{
+        return new Promise(((resolve, reject) => {
             const requestParams = new URLSearchParams({
                 response_type: "code",
                 client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
@@ -27,34 +32,84 @@ export class AuthProvider{
             });
             const params = new URLSearchParams(document.location.search)
             const code = params.get("code")
-            if (code) {
-                this.code = code;
-            } else {
-                document.location.href = process.env.VUE_APP_BASE_URL_SSO + process.env.VUE_APP_OAUTH_AUTHORIZE + '?' + requestParams;
+            if(code){
+                resolve(code)
             }
-        }
+            else {
+                const location = Location.prototype;
+                window.location.href = process.env.VUE_APP_BASE_URL_SSO + process.env.VUE_APP_OAUTH_AUTHORIZE + '?' + requestParams;
+            }
+        }));
     }
 
     public getToken() : AuthToken | null {
         return this.token;
     }
 
-    private createToken() : Promise<AxiosResponse<AuthToken>> | undefined{
-        if(this.code) {
-            const payload = new FormData()
-            payload.append('grant_type', 'authorization_code')
-            payload.append('code', this.code)
-            payload.append('redirect_uri', process.env.VUE_APP_OAUTH_REDIRECT_URI)
-            payload.append('client_id', process.env.VUE_APP_OAUTH_CLIENT_ID)
-            const uninterceptedAxiosInstance  = axios.create()
-            return uninterceptedAxiosInstance.post<AuthToken>(this.baseUrl + process.env.VUE_APP_OAUTH_TOKEN, payload, {
+    public getUserInfo() : UserInfo | null {
+        return this.userInfo;
+    }
+
+    public logout() : void{
+        if(this.token) {
+            const uninterceptedAxiosInstance = axios.create()
+            uninterceptedAxiosInstance.get(this.baseUrl + process.env.VUE_APP_OAUTH_LOGOUT, {
                     headers: {
-                        'Content-type': 'application/url-form-encoded',
-                        'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                        'Authorization': this.token.token_type + ' ' + this.token.access_token
                     }
                 }
-            );
+            ).then(response => {
+                console.warn(response)
+                if(response){
+                    if(this.token) {
+                        const payload = new FormData()
+                        payload.append('token', this.token.refresh_token)
+                        payload.append('token_type_hint', 'refresh_token')
+                        uninterceptedAxiosInstance.post(this.baseUrl + process.env.VUE_APP_OAUTH_REVOKE, payload, {
+                                headers: {
+                                    'Content-type': 'application/url-form-encoded',
+                                    'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                                }
+                            }
+                        ).then(response => {
+                            if (response.status === 200) {
+                                if (this.token) {
+                                    const payload = new FormData()
+                                    payload.append('token', this.token.access_token)
+                                    payload.append('token_type_hint', 'access_token')
+                                    uninterceptedAxiosInstance.post(this.baseUrl + process.env.VUE_APP_OAUTH_REVOKE, payload, {
+                                        headers: {
+                                            'Content-type': 'application/url-form-encoded',
+                                            'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                                        }
+                                    }).then(response => {
+                                            this.clear()
+                                            window.location.reload()
+                                        }
+                                    )
+                                }
+                            }
+                        })
+                    }
+                }
+            });
         }
+    }
+
+    private createToken(code : string) : Promise<AxiosResponse<AuthToken>> | undefined{
+        const payload = new FormData()
+        payload.append('grant_type', 'authorization_code')
+        payload.append('code', code)
+        payload.append('redirect_uri', process.env.VUE_APP_OAUTH_REDIRECT_URI)
+        payload.append('client_id', process.env.VUE_APP_OAUTH_CLIENT_ID)
+        const uninterceptedAxiosInstance  = axios.create()
+        return uninterceptedAxiosInstance.post<AuthToken>(this.baseUrl + process.env.VUE_APP_OAUTH_TOKEN, payload, {
+                headers: {
+                    'Content-type': 'application/url-form-encoded',
+                    'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                }
+            }
+        );
     }
 
     private createInfo(token : AuthToken) : Promise<AxiosResponse<UserInfo>> {
@@ -71,18 +126,19 @@ export class AuthProvider{
     public getAuthorization() : Promise<Authorization> {
         return new Promise<Authorization>((resolve,reject) => {
             if(!this.authorization) {
-
-                this.createToken()?.then(response => {
-                    this.token = response.data
-                    this.createInfo(response.data).then(infoData => {
-                        this.userInfo = infoData.data
-                        this.authorization = new class implements Authorization {
-                            token: AuthToken = response.data;
-                            user: UserInfo = infoData.data;
-                        }
-                        resolve(this.authorization);
-                    })
-                });
+                this.createCode().then(code =>{
+                    this.createToken(code)?.then(response => {
+                        this.token = response.data
+                        this.createInfo(response.data).then(infoData => {
+                            this.userInfo = infoData.data
+                            this.authorization = new class implements Authorization {
+                                token: AuthToken = response.data;
+                                user: UserInfo = infoData.data;
+                            }
+                            resolve(this.authorization);
+                        })
+                    });
+                })
             }
             else {
                 resolve(this.authorization);
@@ -111,6 +167,12 @@ export class AuthProvider{
             },Number.parseInt(<string>this.token?.expires_in))
             })
         )
+    }
+
+    private clear() : void{
+        this.token = null;
+        this.userInfo = null;
+        this.authorization = null;
     }
 
 }

@@ -7,6 +7,6 @@ import Vue from "vue";
 })
 export default class ScrollMenu extends Vue {
 
-    private side : boolean = false
+    private side : boolean = true
 
 }

@@ -1,7 +1,7 @@
 <template>
-  <div :class="'work-place'">
-    work-place
-  </div>
+  <transition name="work-place">
+    <router-view></router-view>
+  </transition>
 </template>
 
 <script src="./workPlace.ts"></script>

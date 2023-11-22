@@ -29,25 +29,17 @@ export default class App extends Vue {
     @Provide('api') api: ApiB2B = new ApiB2B(this.$store);
 
     mounted(){
+        this.api.init();
         navigator.geolocation.getCurrentPosition((pos : GeolocationPosition) => {
             this.$store.commit('setCoordsUser',pos.coords);
         }, err => {
             console.error("Position user not set");
         })
-        window.onfocus = () => {
-            AuthProvider.getProvider().refreshToken()
-        }
-        AuthProvider.getProvider().getAuthorization().then(auth => {
-            if(this.$router.currentRoute.path != "/home"){
-                this.api.init();
-                this.$router.push("/home")
-            }
-            this.api.getApi("/user/test").then(resp => {
-                console.error("REQUEST -2")
-                console.error(resp)
-            }).catch(ex => {
-                console.warn("REQUEST -2 failed")
-            })
+        this.api.getApi("/user/test").then(resp => {
+            console.error("REQUEST -2")
+            console.error(resp)
+        }).catch(ex => {
+            console.warn("REQUEST -2 failed")
         })
 
     }
