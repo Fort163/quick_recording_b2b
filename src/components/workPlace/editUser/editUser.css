@@ -11,7 +11,7 @@
     width: 20px;
     height: 20px;
     margin-top: 0px;
-    margin-left: -15px;
+    margin-left: -25px;
 }
 
 .signal-error{
@@ -20,9 +20,3 @@
 .signal-success{
     background-color: #70ff9d;
 }
-
-/*@media screen and (max-width: 1500px) {
-    div.main-edit {
-        width: 100%;
-    }
-}*/

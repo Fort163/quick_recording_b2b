@@ -15,6 +15,7 @@ export default class Button extends Vue {
     @Prop() private height : String | undefined;
     @Prop() private radius : String | undefined;
     @Prop() private text : String | undefined;
+    @Prop() private backgroundSize : String | undefined;
     @Prop() private select : Boolean | undefined;
     private show : boolean = false;
 
@@ -121,6 +122,15 @@ export default class Button extends Vue {
         }
     }
 
+    protected createBackgroundSize(){
+        if(this.backgroundSize && this.backgroundSize.includes('%')){
+            return this.backgroundSize + ' ' + this.backgroundSize
+        }
+        else {
+            return '60% 60%'
+        }
+    }
+
     get createStyle() : any {
         return {
             '--button-background-color': this.select ? this.changeColor(this.backGroundColor(),35) : this.backGroundColor(),
@@ -130,8 +140,8 @@ export default class Button extends Vue {
             '--button-height': this.heightCalc,
             '--button-background-image' : 'url(' + this.url + ')',
             '--button-border-radius': this.radiusCalc,
-            '--button-background-color--hover': this.changeColor(this.fixColor(this.color),25)/*,
-            '--button-box-shadow--hover': '0px 0px 8px 5px '+this.changeColor(this.fixColor(this.color),-15)*/
+            '--button-background-color--hover': this.changeColor(this.fixColor(this.color),25),
+            '--button-background-size': this.createBackgroundSize()
         }
     }
 

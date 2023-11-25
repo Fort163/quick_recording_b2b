@@ -1,4 +1,4 @@
-.input-test-main{
+.input-date-main{
     width: fit-content;
     height: fit-content;
     display: flex;
@@ -7,7 +7,7 @@
     padding: 10px;
 }
 
-.input-test{
+.input-date{
     background-color: inherit;
     border-radius: inherit;
     width: 100%;
@@ -17,22 +17,27 @@
     box-shadow: 2px 2px 10px #174969;
     font-size: large;
     text-align: center;
+    cursor: pointer;
 }
 
-.input-test:hover{
+.input-date-error{
+    box-shadow: 2px 2px 10px #ea0526;
+}
+
+.input-date:hover{
     background-color: #57b4ee;
 }
 
-.input-test:focus{
+.input-date:focus{
     background-color: #57b4ee;
     outline: none;
 }
 
-.input-test-label-none{
+.input-date-label-none{
     display: none;
 }
 
-.input-test-label-top{
+.input-date-label-top{
     position: fixed;
     margin: 2px;
     color: #585757;

@@ -50,6 +50,10 @@ export class UserInfoChange{
     picture : FileUpload | null
     email: string | null
     gender: string
+    genderItem: Combo
+    test: Array<Combo>
+    test1: Combo | null
+    test2: Combo | null
     phoneNumber: string | null
     birthDay: string | null
 
@@ -62,6 +66,10 @@ export class UserInfoChange{
         this.phoneNumber = info.phoneNumber
         this.birthDay = info.birthDay
         this.email = info.email
+        this.genderItem = new ComboItem(info.gender,'Не определено')
+        this.test = new Array<Combo>()
+        this.test1 = null
+        this.test2 = null
     }
 
 }
@@ -97,4 +105,40 @@ export enum DayOfWeek{
     friday = "Пятница",
     saturday = "Суббота",
     sunday = "Воскресенье"
+}
+
+export class Restriction{
+    valid : boolean
+    error : string | undefined
+
+    constructor(valid: boolean, error?: string) {
+        this.valid = valid;
+        this.error = error;
+    }
+}
+
+export interface Combo{
+    key : string
+    value : string
+}
+
+export class ComboItem implements Combo{
+    key: string;
+    value: string;
+
+    constructor(key?: string, value?: string) {
+        if(key){
+            this.key = key;
+        }
+        else {
+            this.key = '';
+        }
+        if(value){
+            this.value = value;
+        }
+        else {
+            this.value = '';
+        }
+
+    }
 }

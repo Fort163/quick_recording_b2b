@@ -89,7 +89,7 @@ export class ApiB2B implements Api{
 
     patchApi<T>(uri: string,data?:any): Promise<T> {
         this.loadMask(true);
-        return axios.patch(this._URL + uri)
+        return axios.patch(this._URL + uri,data)
             .then((response: any) => {
                     this.loadMask(false);
                     return response.data;

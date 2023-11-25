@@ -5,7 +5,7 @@
     margin-left: 15%;
     margin-right: 15%;
     height: 85%;
-    overflow: hidden;
+    overflow: visible;
     z-index: 5;
 }
 
@@ -22,10 +22,4 @@
 .work-place-leave-to {
     opacity: .5;
     transform: translateX(-50%);
-}
-
-@media screen and (max-width: 1500px) {
-    div.work-place {
-        width: 100%;
-    }
 }

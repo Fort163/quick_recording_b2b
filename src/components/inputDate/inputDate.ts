@@ -6,7 +6,7 @@ import {Restriction} from "@/store/model";
     components: {
     }
 })
-export default class InputText extends Vue {
+export default class InputDate extends Vue {
 
     @Prop() private color : String | undefined;
     @Prop() private backColor : String | undefined;
