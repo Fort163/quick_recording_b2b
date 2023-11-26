@@ -1,7 +1,10 @@
 .bottom-bar-main{
     display: flex;
+    position: sticky;
     flex-direction: column;
-    width: 70%;
+    top: 95%;
+    width: 100%;
     height: 5%;
+    overflow: hidden;
     margin: auto;
 }

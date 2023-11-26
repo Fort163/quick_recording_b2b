@@ -6,6 +6,12 @@
     width: 100%;
     flex-direction: column;
     min-width: 400px;
+    overflow-y: auto;
+}
+
+.position-before-absolute{
+    position: relative;
+    width: 0px;
 }
 
 .main-work{

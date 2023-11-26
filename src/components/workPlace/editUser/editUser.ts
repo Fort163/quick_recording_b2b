@@ -39,7 +39,6 @@ export default class EditUser extends Vue {
     private pageError : Array<string> = new Array<string>()
     private emailError : Array<string> = new Array<string>()
     private phoneError : Array<string> = new Array<string>()
-    private arrayTest : Array<Combo> = new Array<Combo>()
 
 
     mounted() {
@@ -159,7 +158,12 @@ export default class EditUser extends Vue {
                 this.pageError.push(item)
             })
         }
-
+        if(this.pageError.length === 0){
+            if(this.genderCombo && this.info) {
+                this.info.gender = this.genderCombo.key
+            }
+            this.api?.postApi('')
+        }
     }
 
     private getGender(gender : string) : ComboItem{

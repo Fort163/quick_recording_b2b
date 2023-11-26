@@ -6,6 +6,8 @@
     height: 10%;
     min-height: 80px;
     max-height: 80px;
+    position: sticky;
+    top: 0;
 }
 
 .logo{
@@ -31,7 +33,7 @@
 }
 
 .user-info-bar-window{
-    position: absolute;
+    position: fixed;
     z-index: 200;
     width: 13%;
     height: 30%;

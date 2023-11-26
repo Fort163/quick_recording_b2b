@@ -1,7 +1,9 @@
 <template>
-  <transition name="work-place">
-    <router-view></router-view>
-  </transition>
+  <div :class="'work-place-overflow-y'">
+    <transition name="work-place">
+      <router-view></router-view>
+    </transition>
+  </div>
 </template>
 
 <script src="./workPlace.ts"></script>
