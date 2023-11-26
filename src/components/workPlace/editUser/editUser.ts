@@ -1,6 +1,6 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Combo, ComboItem, State, UserInfo, UserInfoChange} from "@/store/model";
+import {Combo, ComboItem, Errors, State, UserInfo, UserInfoChange} from "@/store/model";
 import {Inject} from "vue-property-decorator";
 import {AuthProvider} from "@/auth/AuthProvider";
 import InputText from "@/components/inputText/InputText.vue";
@@ -25,6 +25,7 @@ export default class EditUser extends Vue {
 
     @Inject('api') api: ApiB2B | undefined;
     private info : UserInfoChange | null = null
+    private genderCombo : ComboItem | null = null
     private emailCode : string | null  = null
     private emailCodeSend : Boolean  = false
     private emailCodeSendAgain : Boolean  = false
@@ -35,18 +36,24 @@ export default class EditUser extends Vue {
     private phoneVerified : boolean = false
     private restriction : RestrictionFactory = new RestrictionFactory();
     private dateUtil : DateUtil = new DateUtil();
+    private pageError : Array<string> = new Array<string>()
+    private emailError : Array<string> = new Array<string>()
+    private phoneError : Array<string> = new Array<string>()
+    private arrayTest : Array<Combo> = new Array<Combo>()
 
 
     mounted() {
         const userInfo : UserInfo | null = AuthProvider.init().getUserInfo();
         if(userInfo){
             this.info = new UserInfoChange(userInfo);
+            this.genderCombo = this.getGender(this.info.gender);
             this.emailVerified = !!this.info.email;
             this.phoneVerified = !!this.info.phoneNumber;
         }
     }
 
     public createCodeEmail(){
+        this.emailError = new Array<string>()
         if(this.info && this.info.email) {
             this.emailCodeSendAgain = false;
             const requestParams = new URLSearchParams();
@@ -56,22 +63,34 @@ export default class EditUser extends Vue {
                 this.emailCodeSend = response;
             })
         }
+        else {
+            this.emailError.push("Заполните Email")
+        }
     }
 
     public checkCodeEmail(){
+
         if(this.info && this.info.email && this.emailCode) {
             const requestParams = new URLSearchParams();
             requestParams.append("email", this.info.email);
             requestParams.append("code", this.emailCode);
             this.api?.getApi<boolean>('/user/checkCodeEmail',requestParams).then(response => {
-                this.emailCodeSend = false;
-                this.emailCode = null;
+                this.emailError = new Array<string>()
+                if(response){
+                    this.emailCodeSend = false;
+                    this.emailCode = null;
+                    this.emailVerified = response;
+                }
+                else {
+                    this.emailError.push("Неверный код")
+                }
                 this.emailVerified = response;
             })
         }
     }
 
     public createCodePhone(){
+        this.phoneError = new Array<string>()
         if(this.info && this.info.phoneNumber) {
             this.phoneCodeSendAgain = false;
             const requestParams = new URLSearchParams();
@@ -81,6 +100,9 @@ export default class EditUser extends Vue {
                 this.phoneCodeSend = response;
             })
         }
+        else {
+            this.phoneError.push("Введите номер телефона")
+        }
     }
 
     public checkCodePhone(){
@@ -89,9 +111,15 @@ export default class EditUser extends Vue {
             requestParams.append("phone", this.info.phoneNumber);
             requestParams.append("code", this.phoneCode);
             this.api?.getApi<boolean>('/user/checkCodePhone',requestParams).then(response => {
-                this.phoneCodeSend = false;
-                this.phoneCode = null;
-                this.phoneVerified = response;
+                this.phoneError = new Array<string>()
+                if(response){
+                    this.phoneCodeSend = false;
+                    this.phoneCode = null;
+                    this.phoneVerified = response;
+                }
+                else {
+                    this.phoneError.push("Неверный код")
+                }
             })
         }
     }
@@ -116,29 +144,26 @@ export default class EditUser extends Vue {
         },30000)
     }
 
-
-    public getRequest() : RequestCombo{
-        //(uri: String, method: String, param: URLSearchParams | FormData, value : string, key: string, needQuery?: boolean, paramQuery?: string)
-        return new RequestCombo("/user/test/company","GET",null,'name','uuid')
-    }
-
-    public getRequest1() : RequestCombo{
-        //(uri: String, method: String, param: URLSearchParams | FormData, value : string, key: string, needQuery?: boolean, paramQuery?: string)
-        return new RequestCombo("/user/test/combo1","GET",null,'name','uuid')
-    }
-
-    public getRequest2() : RequestCombo | null{
-        if(this.info?.test1){
-            const param : any = new Object();
-            param['parentUUID'] = this.info.test1.key
-            param['staticParam'] = 'GOOGOL'
-            return new RequestCombo("/user/test/combo2","POST",param,'name','uuid')
-        }
-        return null;
-    }
-
     public submit(){
-        console.error(this.restriction.checkError())
+        this.pageError = new Array<string>();
+        if(this.info?.email && !this.emailVerified){
+            console.log('2')
+            this.pageError.push("Подтвердите Email")
+        }
+        if(this.info?.phoneNumber && !this.phoneVerified){
+            this.pageError.push("Подтвердите телефон")
+        }
+        const error : Errors = this.restriction.checkError()
+        if(error.hasError){
+            error.errors.forEach(item => {
+                this.pageError.push(item)
+            })
+        }
+
+    }
+
+    private getGender(gender : string) : ComboItem{
+        return <ComboItem>this.createGender().find(item => item.key === gender)
     }
 
 }

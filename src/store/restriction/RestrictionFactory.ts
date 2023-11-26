@@ -1,17 +1,18 @@
-import {Restriction} from "@/store/model";
+import {Errors, Restriction} from "@/store/model";
 import {RequestCombo} from "@/components/comboBox/comboBox";
 
 export class RestrictionFactory {
 
-    public checkNotNull(): Function {
+    public checkNotNull(fieldName? : string): Function {
+        const error = fieldName ? "Поле "+fieldName+" обязательно для заполнения" : 'Поле обязательно для заполнения'
         return function (value: any): Restriction {
             if (value) {
                 if (value instanceof Array && value.length === 0) {
-                    return new Restriction(false, "Поле обязательно для заполнения");
+                    return new Restriction(false, error);
                 }
                 return new Restriction(true);
             }
-            return new Restriction(false, "Поле обязательно для заполнения");
+            return new Restriction(false, error);
         }
     }
 
@@ -48,12 +49,13 @@ export class RestrictionFactory {
         }
     }
 
-    public checkCharacterRus(): Function {
+    public checkCharacterRus(errorCustom? : string): Function {
+        const error = errorCustom ? errorCustom : 'Здесь возможны только русские символы'
         return function (value: string): Restriction {
             if (/^[а-яА-ЯёЁ]+$/.test(value)) {
                 return new Restriction(true);
             }
-            return new Restriction(false, "Возможна только кириллица");
+            return new Restriction(false, errorCustom);
         }
     }
 
@@ -75,7 +77,8 @@ export class RestrictionFactory {
         }
     }
 
-    public checkDate(from?: string, to?: string): Function {
+    public checkDate(from?: string, to?: string,fieldName? : string,errorCustom? : string): Function {
+        const field = fieldName ? fieldName : 'Дата'
         return function (value: string): Restriction {
             let fromDate: number | null = null;
             let toDate: number | null = null;
@@ -93,21 +96,24 @@ export class RestrictionFactory {
                     if ((fromDate < date) && (date < toDate)) {
                         return new Restriction(true);
                     } else {
-                        return new Restriction(false, "Дата должна быть в промежутке от " + new Date(fromDate).toLocaleDateString() + ' до ' + new Date(toDate).toLocaleDateString());
+                        const error = errorCustom ? errorCustom : field + ' должна быть в промежутке от ' + new Date(fromDate).toLocaleDateString() + ' до ' + new Date(toDate).toLocaleDateString();
+                        return new Restriction(false, error )
                     }
                 } else {
                     if (fromDate) {
                         if (fromDate < date) {
                             return new Restriction(true);
                         } else {
-                            return new Restriction(false, "Дата должна быть позднее " + new Date(fromDate).toLocaleDateString());
+                            const error = errorCustom ? errorCustom : field + ' должна быть позднее ' + new Date(fromDate).toLocaleDateString();
+                            return new Restriction(false, error);
                         }
                     } else {
                         if (toDate) {
                             if (date < toDate) {
                                 return new Restriction(true);
                             } else {
-                                return new Restriction(false, "Дата должна быть не позднее " + new Date(toDate).toLocaleDateString());
+                                const error = errorCustom ? errorCustom : field + ' должна быть не позднее ' + new Date(toDate).toLocaleDateString();
+                                return new Restriction(false, error);
                             }
                         }
                     }
@@ -159,20 +165,21 @@ export class RestrictionFactory {
         const elementNodeListOf = document.querySelectorAll('[errors]');
         const errors = new Array<string>()
         elementNodeListOf.forEach(item => {
-            const atrr: Attr | null = item.getAttributeNode("errors")
-            if (atrr) {
-                if(atrr.value.length > 0){
-                    errors.push(atrr.value)
+            if(item.tagName !== 'BUTTON') {
+                const atrr: Attr | null = item.getAttributeNode("errors")
+                if (atrr) {
+                    if (atrr.value.length > 0) {
+                        errors.push(atrr.value)
+                    }
                 }
             }
-
         })
         return new PageError(errors.length, errors, errors.length !== 0);
     }
 
 }
 
-class PageError {
+class PageError implements Errors{
     private _count: number
     private _errors: Array<string>
     private _hasError: boolean

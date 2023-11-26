@@ -29,6 +29,12 @@
     cursor: cell;
 }
 
+.combo-label{
+    position: relative;
+    margin: auto;
+    color: #585757;
+    font-size: inherit;
+}
 
 .combo-search{
     width: inherit;

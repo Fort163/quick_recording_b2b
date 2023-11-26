@@ -4,6 +4,7 @@
        @mouseleave="mouseLeaveComponent()">
     <div :class="['combo-display' , disabled ? 'combo-display-disabled' : '']"
          @dblclick="openStore = true" @click="(!multi) ? openStore = true : openStore=!openStore">
+      <label v-if="label && ((!currentValue && !multi) || (multi && !openStore && currentValue.length === 0))" :class="['combo-label']">{{label}}</label>
       <input v-if="openStore && searchOn && !disabled" type="search" :class="'combo-search'" :placeholder="'Поиск'" autofocus v-model="search" @change="searchRequest()"
              @focusin="openStore = true" @focusout="openStore = false">
       <template v-if="(multi && !openStore && searchOn) || (multi && !searchOn)">

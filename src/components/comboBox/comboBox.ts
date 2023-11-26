@@ -29,9 +29,9 @@ export default class ComboBox extends Vue {
      */
     @Prop() private height: String | undefined;
     /*
-        Не реализован
+        Значение в placeholder
      */
-    @Prop() private text: String | undefined;
+    @Prop() private label: String | undefined;
     /*
         Запрос на сервер выполняется при постройке элемента
         и при каждом изменении параметра если установлен параметр : needQuery = true

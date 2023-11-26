@@ -17,6 +17,7 @@ export default class Button extends Vue {
     @Prop() private text : String | undefined;
     @Prop() private backgroundSize : String | undefined;
     @Prop() private select : Boolean | undefined;
+    @Prop() private errors : Array<string> | undefined;
     private show : boolean = false;
 
     created(){
@@ -76,7 +77,7 @@ export default class Button extends Vue {
 
     protected fixParam(param : String | undefined) : String{
         if(param){
-            if(param.includes('px') ||  param.includes('%')){
+            if(param.toString().includes('px') ||  param.toString().includes('%')){
                 return param
             }
             else {
@@ -118,7 +119,7 @@ export default class Button extends Vue {
             return "#" + RR + GG + BB;
         }
         else {
-            return color;
+            return '#57b4ee';
         }
     }
 

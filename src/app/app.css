@@ -149,18 +149,20 @@ All application class
     content: attr(errors);
     background-color: rgba(240,132,147,.8);
     width: fit-content;
-    font-size: large;
+    font-size: medium;
     text-align: center;
     height: fit-content;
+    max-height: 150px;
     box-shadow: 2px 2px 20px #ea0526;
     min-width: 200px;
-    z-index: 400;
+    z-index: 1000;
     visibility: hidden;
     padding: 15px;
     left: 100%;
     top: 50%;
     border-radius: 20px;
     border-top-left-radius: 0;
+    overflow-y: auto;
 }
 
 [errors] {
