@@ -6,7 +6,7 @@ export class AuthProvider{
 
     private baseUrl : string = process.env.VUE_APP_BASE_URL_SSO;
     private token : AuthToken | null = null;
-    private userInfo : UserInfo | null = null;
+    private _userInfo : UserInfo | null = null;
     private authorization : Authorization | null = null
     private code : string | null = null;
     private static provider : AuthProvider;
@@ -46,8 +46,12 @@ export class AuthProvider{
         return this.token;
     }
 
-    public getUserInfo() : UserInfo | null {
-        return this.userInfo;
+    get userInfo() : UserInfo | null {
+        return this._userInfo;
+    }
+
+    set userInfo(value: UserInfo | null) {
+        this._userInfo = value;
     }
 
     public logout() : void{
@@ -130,7 +134,7 @@ export class AuthProvider{
                     this.createToken(code)?.then(response => {
                         this.token = response.data
                         this.createInfo(response.data).then(infoData => {
-                            this.userInfo = infoData.data
+                            this._userInfo = infoData.data
                             this.authorization = new class implements Authorization {
                                 token: AuthToken = response.data;
                                 user: UserInfo = infoData.data;
@@ -171,7 +175,7 @@ export class AuthProvider{
 
     private clear() : void{
         this.token = null;
-        this.userInfo = null;
+        this._userInfo = null;
         this.authorization = null;
     }
 

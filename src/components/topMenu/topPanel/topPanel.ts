@@ -9,7 +9,7 @@ import {AuthProvider} from "@/auth/AuthProvider";
 export default class TopPanel extends Vue {
 
     private show : boolean = false;
-    private userInfo = AuthProvider.init().getUserInfo();
+    private userInfo = AuthProvider.init().userInfo;
     $router: any;
 
     public logout(){

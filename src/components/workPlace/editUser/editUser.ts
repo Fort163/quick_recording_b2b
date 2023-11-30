@@ -41,7 +41,7 @@ export default class EditUser extends Vue {
 
 
     mounted() {
-        const userInfo : UserInfo | null = AuthProvider.init().getUserInfo();
+        const userInfo : UserInfo | null = AuthProvider.init().userInfo;
         if(userInfo){
             this.info = new UserInfoChange(userInfo);
             this.genderCombo = this.getGender(this.info.gender);
@@ -160,7 +160,11 @@ export default class EditUser extends Vue {
             if(this.genderCombo && this.info) {
                 this.info.gender = this.genderCombo.key
             }
-            this.api?.patchApi('/user/change',this.info);
+            this.api?.patchApi<UserInfo>('/user/change',this.info).then(response => {
+                console.log(response)
+                AuthProvider.init().userInfo = response
+                this.$router.push('/')
+            });
         }
     }
 
