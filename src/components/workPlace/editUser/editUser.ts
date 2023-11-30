@@ -10,7 +10,6 @@ import InputDate from "@/components/inputDate/InputDate.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {DateUtil} from "@/store/util/DateUtil";
 import ComboBox from "@/components/comboBox/ComboBox.vue";
-import {RequestCombo} from "@/components/comboBox/comboBox";
 
 @Component({
     components: {
@@ -146,7 +145,6 @@ export default class EditUser extends Vue {
     public submit(){
         this.pageError = new Array<string>();
         if(this.info?.email && !this.emailVerified){
-            console.log('2')
             this.pageError.push("Подтвердите Email")
         }
         if(this.info?.phoneNumber && !this.phoneVerified){
@@ -162,7 +160,7 @@ export default class EditUser extends Vue {
             if(this.genderCombo && this.info) {
                 this.info.gender = this.genderCombo.key
             }
-            this.api?.postApi('')
+            this.api?.patchApi('/user/change',this.info);
         }
     }
 

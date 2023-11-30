@@ -33,6 +33,7 @@ export interface Authority{
 }
 
 export interface UserInfo{
+    uuid : string
     authorities : Array<Authority>,
     name : string,
     fullName: string,
@@ -45,6 +46,7 @@ export interface UserInfo{
 
 export class UserInfoChange{
 
+    uuid : string
     firstName : string
     lastName : string
     picture : FileUpload | null
@@ -55,6 +57,7 @@ export class UserInfoChange{
 
     constructor(info : UserInfo) {
         const strings = info.fullName.split(' ');
+        this.uuid = info.uuid
         this.firstName = strings[0]
         this.lastName = strings[1]
         this.picture = null
