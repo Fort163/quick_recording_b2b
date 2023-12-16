@@ -118,3 +118,15 @@ export class ApiB2B implements Api{
     }
 
 }
+
+export interface Pageable<T> {
+    content: Array<T>
+    number: number
+    size: number
+    totalElements: number
+    first: boolean
+    last: boolean
+    numberOfElements: number
+    totalPages: number
+    hasContent: boolean
+}

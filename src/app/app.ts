@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import {createStore} from '@/store/store.ts'
 import Vuex from "vuex";
 import Component from "vue-class-component";
 import TopPanel from "@/components/topMenu/topPanel/TopPanel.vue";
@@ -21,27 +20,19 @@ Vue.use(VueCookies);
         WorkPlace,
         ScrollMenu,
         BottomBar
-    },
-    store:createStore()
+    }
 })
 export default class App extends Vue {
 
     @Provide('api') api: ApiB2B = new ApiB2B(this.$store);
 
-    mounted(){
+    created(){
         this.api.init();
         navigator.geolocation.getCurrentPosition((pos : GeolocationPosition) => {
             this.$store.commit('setCoordsUser',pos.coords);
         }, err => {
             console.error("Position user not set");
         })
-        this.api.getApi("/user/test").then(resp => {
-            console.error("REQUEST -2")
-            console.error(resp)
-        }).catch(ex => {
-            console.warn("REQUEST -2 failed")
-        })
-
     }
 
 }

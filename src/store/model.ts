@@ -2,8 +2,46 @@ import {GeocoderResult} from "@/structure/map/ymapsModel";
 import {AuthProvider} from "@/auth/AuthProvider";
 
 export interface State{
-    mapInfo : MapInfo,
+    currentPath : string
+    createCompany : Company | null
+    myCompany : Company | null
+    mapInfo : MapInfo
     mask : MaskModel
+}
+
+export interface Base{
+    uuid : string | null
+}
+
+export interface Company extends Base {
+    name : string | null
+    activity : Array<Activity>
+    schedules : Array<Schedule>
+    geoPosition : GeocoderResult | null
+}
+
+export interface Schedule extends Base{
+    dayOfWeek : string,
+    clockFrom : string,
+    clockTo : string,
+    work : boolean
+}
+
+export class NewSchedule implements Schedule{
+    uuid = null
+    clockFrom : string = '';
+    clockTo : string = '';
+    work : boolean = false;
+    dayOfWeek: string;
+    constructor(dayOfWeek: DayOfWeek) {
+        this.dayOfWeek = dayOfWeek.toString();
+    }
+}
+
+export interface Activity extends Base{
+    name: string
+    description: string
+    isActive: boolean
 }
 
 export interface MaskModel {

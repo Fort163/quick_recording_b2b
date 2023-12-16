@@ -56,12 +56,31 @@ export class AuthProvider{
 
     public logout() : void{
         if(this.token) {
+            const strings = document.cookie.split('=');
+            let headerName = ''
+            let headerValue = ''
+            if(strings.length === 2){
+                headerName=strings[0]
+                headerValue=strings[1]
+            }
             const uninterceptedAxiosInstance = axios.create()
-            uninterceptedAxiosInstance.get(this.baseUrl + process.env.VUE_APP_OAUTH_LOGOUT, {
+            let config;
+            if(headerName.length > 0){
+                config = {
                     headers: {
-                        'Authorization': this.token.token_type + ' ' + this.token.access_token
+                        Authorization : this.token.token_type + ' ' + this.token.access_token,
+                        [headerName] : headerValue
                     }
                 }
+            }
+            else {
+                config = {
+                    headers: {
+                        Authorization : this.token.token_type + ' ' + this.token.access_token
+                    }
+                }
+            }
+            uninterceptedAxiosInstance.get(this.baseUrl + process.env.VUE_APP_OAUTH_LOGOUT, config
             ).then(response => {
                 console.warn(response)
                 if(response){

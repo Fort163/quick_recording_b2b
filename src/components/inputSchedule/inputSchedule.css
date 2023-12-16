@@ -1,0 +1,25 @@
+.input-schedule-main{
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+    padding: 10px;
+    border: #1E98FF solid 1px;
+    box-shadow: 2px 2px 10px #174969;
+}
+
+.input-checkBox-label-top{
+    position: absolute;
+    width: max-content;
+    margin: 2px;
+    color: #585757;
+    font-size: small;
+    z-index: 5;
+}
+
+@media screen and (max-width: 1000px) {
+    label.input-checkBox-label-top {
+        display: none;
+    }
+}

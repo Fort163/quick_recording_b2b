@@ -1,4 +1,4 @@
-import {Errors, Restriction} from "@/store/model";
+import {Errors, Restriction, Schedule} from "@/store/model";
 import {RequestCombo} from "@/components/comboBox/comboBox";
 
 export class RestrictionFactory {
@@ -158,6 +158,30 @@ export class RestrictionFactory {
                 return new Restriction(true);
             }
 
+        }
+    }
+
+    public checkSchedule(): Function {
+        return function (value: Schedule): Restriction {
+            if(value.work){
+                if(value.clockFrom && value.clockTo){
+                    if(value.clockFrom > value.clockTo){
+                        return new Restriction(false, "Неверный интервал времени в " + value.dayOfWeek);
+                    }
+                    else {
+                        return new Restriction(true);
+                    }
+                }
+                else {
+                    if(!value.clockFrom){
+                        return new Restriction(false, "Заполните время начала рабочего дня в " + value.dayOfWeek);
+                    }
+                    if(!value.clockTo){
+                        return new Restriction(false, "Заполните время окончания рабочего дня в " + value.dayOfWeek);
+                    }
+                }
+            }
+            return new Restriction(true);
         }
     }
 

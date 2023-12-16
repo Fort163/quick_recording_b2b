@@ -48,11 +48,11 @@ export default class ComboBox extends Vue {
     /*
         Массив статических эелементов
      */
-    @Prop() private values: Array<Combo> | undefined;
+    @Prop() private values: Array<Object> | undefined;
     /*
         Проставляется автоматически параметром v-model
      */
-    @Prop() private value: Combo | Array<Combo> | undefined;
+    @Prop() private value: Object | Array<Object> | undefined;
     /*
         Включение поисковой строки
      */
@@ -64,9 +64,9 @@ export default class ComboBox extends Vue {
             if (oldValue) {
                 if (JSON.stringify(oldValue) !== JSON.stringify(value)) {
                     this.sendRequest(value);
-                    this.store = new Array<Combo>()
+                    this.store = new Array<Object>()
                     if (this.currentValue instanceof Array) {
-                        this.currentValue = new Array<Combo>()
+                        this.currentValue = new Array<Object>()
                     } else {
                         this.currentValue = null
                     }
@@ -91,8 +91,8 @@ export default class ComboBox extends Vue {
     private show: boolean = false;
     private multi: boolean = false;
     private search: string = '';
-    private currentValue: Combo | Array<Combo> | null = null;
-    private store: Array<Combo> = new Array<Combo>();
+    private currentValue: Object | Array<Object> | null = null;
+    private store: Array<Object> = new Array<Object>();
     private errors: Array<Restriction> = new Array<Restriction>();
 
     created() {
@@ -136,19 +136,29 @@ export default class ComboBox extends Vue {
         this.submit()
     }
 
-    public filterStore(): Array<Combo> {
+    public filterStore(): Array<Object> {
         if (this.request?.needQuery) {
-            return this.store
-        } else {
-            return this.store.filter(item => {
+            return this.store.filter((item : any) => {
                 if (this.currentValue) {
                     if (this.multi) {
-                        return !(<Array<Combo>>this.currentValue).map(value => value.key).includes(item.key) && (this.search === '' || item.value.toUpperCase().includes(this.search.toUpperCase()))
+                        return !(<Array<Object>>this.currentValue).map((value : any) => value[this.key]).includes(item[this.key]) && (this.search === '' || item[this.val].toUpperCase().includes(this.search.toUpperCase()))
                     } else {
-                        return ((<Combo>this.currentValue).key !== item.key) && (this.search === '' || item.value.toUpperCase().includes(this.search.toUpperCase()))
+                        return ((<any>this.currentValue)[this.key] !== item[this.key]) && (this.search === '' || item[this.val].toUpperCase().includes(this.search.toUpperCase()))
                     }
                 } else {
-                    return (this.search === '' || item.value.toUpperCase().includes(this.search.toUpperCase()))
+                    return (this.search === '' || item[this.val].toUpperCase().includes(this.search.toUpperCase()))
+                }
+            });
+        } else {
+            return this.store.filter((item : any) => {
+                if (this.currentValue) {
+                    if (this.multi) {
+                        return !(<Array<Object>>this.currentValue).map((value : any) => value[this.key]).includes(item[this.key]) && (this.search === '' || item[this.val].toUpperCase().includes(this.search.toUpperCase()))
+                    } else {
+                        return ((<any>this.currentValue)[this.key] !== item[this.key]) && (this.search === '' || item[this.val].toUpperCase().includes(this.search.toUpperCase()))
+                    }
+                } else {
+                    return (this.search === '' || item[this.val].toUpperCase().includes(this.search.toUpperCase()))
                 }
 
             });
@@ -186,10 +196,11 @@ export default class ComboBox extends Vue {
     }
 
     public searchRequest() {
-        if (this.request && this.request.needQuery) {
-            this.sendRequest(this.request)
+        if(this.search.length > 2) {
+            if (this.request && this.request.needQuery) {
+                this.sendRequest(this.request)
+            }
         }
-
     }
 
     private submit() {
@@ -256,11 +267,38 @@ export default class ComboBox extends Vue {
             if (response instanceof Array) {
                 this.store = new Array<Combo>();
                 response.forEach(item => {
-                    const test = new ComboItem(item[request.key], item[request.value])
-                    this.store.push(test);
+                    this.store.push(item);
+                    //this.openStore = true
                 })
             }
+            else {
+                if(response.content && response.content instanceof Array){
+                    this.store = new Array<Combo>();
+                    response.content.forEach((item : any)=> {
+                        this.store.push(item);
+                        //this.openStore = true
+                    })
+                }
+            }
         })
+    }
+
+    get key() : string{
+        if(this.request){
+            return this.request.key
+        }
+        else {
+            return 'key'
+        }
+    }
+
+    get val() : string{
+        if(this.request){
+            return this.request.value
+        }
+        else {
+            return 'value'
+        }
     }
 
     private createQueryParam<T>(request: RequestCombo): T {

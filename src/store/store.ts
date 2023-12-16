@@ -1,12 +1,14 @@
 import Vuex, {Store} from "vuex";
 import {
-    Authorization,
+    Authorization, AuthToken, Company,
     LoadMask,
     MapInfo,
     MaskModel,
     ModalWindow,
-    State
+    State, UserInfo
 } from "@/store/model";
+import axios from "axios";
+import {AuthProvider} from "@/auth/AuthProvider";
 
 function defaultMapInfo() : MapInfo{
     return {
@@ -23,23 +25,71 @@ function defaultMapInfo() : MapInfo{
 class AppState implements State{
     mapInfo : MapInfo;
     mask : MaskModel;
-    authorization : Authorization | null;
+    createCompany : Company | null
+    myCompany : Company | null
+    currentPath : string
     constructor() {
-        this.authorization = null;
+        this.currentPath = 'home'
+        this.createCompany = null
+        this.myCompany = null
         this.mask = new class implements MaskModel {
             loadMask: LoadMask | null = null;
             modalWindow: ModalWindow | null = null;
         };
         this.mapInfo = defaultMapInfo();
     }
-
-
 }
 
-export function createStore() : Store<State>{
+function getState() : Promise<State> {
+    return new Promise<State>(((resolve, reject) => {
+            const uninterceptedAxiosInstance  = axios.create()
+            const provider = AuthProvider.init()
+            const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
+            uninterceptedAxiosInstance.get<State>(process.env.VUE_APP_BASE_URL_B2B_SERVICE + "/session",{
+                    headers: {
+                        'Authorization': token
+                    }
+                }
+            ).then(response => {
+                resolve(response.data);
+            }).catch(reason => {
+                resolve(new AppState());
+            });
+        })
+    )
+}
+
+function createStore(state : State) : Store<State>{
     const storeApp = new Vuex.Store({
-        state: new AppState(),
+        state: state,
+        actions: {
+            setCurrentPath(context,value : string){
+                const uninterceptedAxiosInstance = axios.create()
+                const provider = AuthProvider.init()
+                const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
+                context.commit('setCurrentPath',value);
+                uninterceptedAxiosInstance.post<String>(process.env.VUE_APP_BASE_URL_B2B_SERVICE + "/session", context.state, {
+                    headers: {
+                        'Authorization': token
+                    }
+                }).then(response => {
+
+                }).catch(reason => {
+
+                })
+            }
+        },
         mutations: {
+            setCurrentPath (state : State,value : string){
+                state.currentPath = value;
+            },
+            setCreateCompany (state : State,value : Company){
+                state.createCompany = value;
+                console.log("Set company")
+            },
+            setMyCompany (state : State,value : Company){
+                state.myCompany = value;
+            },
             setLoadMask (state : State,value : LoadMask) {
                 state.mask.loadMask = value;
                 console.log("Load mask : " + (value.show?'On':'Off'))
@@ -50,8 +100,33 @@ export function createStore() : Store<State>{
             }
         },
         getters: {
-
+            currentPath(state){
+                return state.currentPath
+            },
+            createCompany(state){
+                return state.createCompany
+            },
+            myCompany(state){
+                return state.myCompany
+            },
+            coordsUser(state){
+                return state.mapInfo.coords
+            },
+            settingsMap(state){
+                return state.mapInfo.settings
+            }
         }
     });
     return storeApp;
+}
+
+export function initStore() : Promise<Store<State>>{
+    return new Promise<Store<State>>(((resolve, reject) => {
+        getState().then(state => {
+            resolve(createStore(state))
+        }).catch(reason => {
+                console.error("Error not create store!")
+                console.error(reason)
+        })
+    }))
 }
