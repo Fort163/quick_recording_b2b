@@ -8,6 +8,7 @@ import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import InputText from "@/components/inputText/InputText.vue";
 import Button from "@/components/button/Button.vue";
 import {AuthProvider} from "@/auth/AuthProvider";
+import {ApiB2B} from "@/api/api";
 
 @Component({
     components: {
@@ -19,12 +20,17 @@ import {AuthProvider} from "@/auth/AuthProvider";
 })
 export default class CompanyStep_1 extends Vue {
 
+    @Inject('api') api: ApiB2B | undefined;
     private company : Company = this.$store.getters.createCompany
     private restriction : RestrictionFactory = new RestrictionFactory();
     private pageError : Array<string> = new Array<string>()
 
     public getActivity() : RequestCombo {
-        return new RequestCombo('/company/activity','GET',null,'name','uuid',true,'name')
+        const uri = this.api?.companyApi('/activity');
+        if(!uri){
+            throw new Error("ApiB2B not create")
+        }
+        return new RequestCombo(uri,'GET',null,'name','uuid',true,'name')
     }
 
     public submit(){

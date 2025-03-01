@@ -45,7 +45,8 @@ function getState() : Promise<State> {
             const uninterceptedAxiosInstance  = axios.create()
             const provider = AuthProvider.init()
             const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
-            uninterceptedAxiosInstance.get<State>(process.env.VUE_APP_BASE_URL_B2B_SERVICE + "/session",{
+            uninterceptedAxiosInstance.get<State>(
+                process.env.VUE_APP_BASE_URL_B2B_SERVICE + process.env.VUE_APP_SESSION_API,{
                     headers: {
                         'Authorization': token
                     }
@@ -68,7 +69,9 @@ function createStore(state : State) : Store<State>{
                 const provider = AuthProvider.init()
                 const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
                 context.commit('setCurrentPath',value);
-                uninterceptedAxiosInstance.post<String>(process.env.VUE_APP_BASE_URL_B2B_SERVICE + "/session", context.state, {
+                uninterceptedAxiosInstance.post<String>(
+                    process.env.VUE_APP_BASE_URL_B2B_SERVICE + process.env.VUE_APP_SESSION_API,
+                    context.state, {
                     headers: {
                         'Authorization': token
                     }

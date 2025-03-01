@@ -117,6 +117,18 @@ export class ApiB2B implements Api{
         });
     }
 
+    public userApi(uri:string):string{
+        return process.env.VUE_APP_USER_API + uri;
+    }
+
+    public sessionApi(uri:string):string{
+        return process.env.VUE_APP_SESSION_API + uri;
+    }
+
+    public companyApi(uri:string):string{
+        return process.env.VUE_APP_COMPANY_API + uri;
+    }
+
 }
 
 export interface Pageable<T> {

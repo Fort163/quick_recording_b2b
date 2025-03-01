@@ -56,7 +56,7 @@ export default class EditUser extends Vue {
             this.emailCodeSendAgain = false;
             const requestParams = new URLSearchParams();
             requestParams.append("email", this.info.email);
-            this.api?.getApi<Boolean>('/user/createCodeEmail',requestParams).then(response => {
+            this.api?.getApi<Boolean>(this.api?.userApi('/createCodeEmail'),requestParams).then(response => {
                 this.timerEmail()
                 this.emailCodeSend = response;
             })
@@ -72,7 +72,7 @@ export default class EditUser extends Vue {
             const requestParams = new URLSearchParams();
             requestParams.append("email", this.info.email);
             requestParams.append("code", this.emailCode);
-            this.api?.getApi<boolean>('/user/checkCodeEmail',requestParams).then(response => {
+            this.api?.getApi<boolean>(this.api?.userApi('/checkCodeEmail'),requestParams).then(response => {
                 this.emailError = new Array<string>()
                 if(response){
                     this.emailCodeSend = false;
@@ -93,7 +93,7 @@ export default class EditUser extends Vue {
             this.phoneCodeSendAgain = false;
             const requestParams = new URLSearchParams();
             requestParams.append("phone", this.info.phoneNumber);
-            this.api?.getApi<Boolean>('/user/createCodePhone',requestParams).then(response => {
+            this.api?.getApi<Boolean>(this.api?.userApi('/createCodePhone'),requestParams).then(response => {
                 this.timerPhone()
                 this.phoneCodeSend = response;
             })
@@ -108,7 +108,7 @@ export default class EditUser extends Vue {
             const requestParams = new URLSearchParams();
             requestParams.append("phone", this.info.phoneNumber);
             requestParams.append("code", this.phoneCode);
-            this.api?.getApi<boolean>('/user/checkCodePhone',requestParams).then(response => {
+            this.api?.getApi<boolean>(this.api?.userApi('/checkCodePhone'),requestParams).then(response => {
                 this.phoneError = new Array<string>()
                 if(response){
                     this.phoneCodeSend = false;
@@ -160,7 +160,7 @@ export default class EditUser extends Vue {
             if(this.genderCombo && this.info) {
                 this.info.gender = this.genderCombo.key
             }
-            this.api?.patchApi<UserInfo>('/user/change',this.info).then(response => {
+            this.api?.patchApi<UserInfo>(this.api?.userApi('/change'),this.info).then(response => {
                 console.log(response)
                 AuthProvider.init().userInfo = response
                 this.$router.push('/')
