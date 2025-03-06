@@ -24,16 +24,23 @@ export default class InputSchedule extends Vue {
 
     private currentValue : Schedule | undefined;
 
+    private stringValue : string | undefined;
+
     private restriction : RestrictionFactory = new RestrictionFactory();
 
     created(){
         if(this.value) {
             this.currentValue = this.value
+            this.stringValue = this.getValue(this.value.dayOfWeek)
         }
     }
 
     mounted(){
         //this.currentValue = this.value
+    }
+
+    getValue(dayOfWeek : string | undefined) : string | undefined{
+        return this.$t('enums.dayOfWeek.'+dayOfWeek).toString();
     }
 
     public check(){

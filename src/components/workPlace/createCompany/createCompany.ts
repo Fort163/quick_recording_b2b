@@ -1,8 +1,6 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import ComboBox from "@/components/comboBox/ComboBox.vue";
-import {RequestCombo} from "@/components/comboBox/comboBox";
-import {Activity, Combo, Company, Schedule} from "@/store/model";
+import {Activity, Company, Schedule} from "@/store/model";
 import CompanyStep_1 from "@/components/workPlace/createCompany/companyStep_1/CompanyStep_1.vue";
 import CompanyStep_2 from "@/components/workPlace/createCompany/companyStep_2/CompanyStep_2.vue";
 import CompanyStep_3 from "@/components/workPlace/createCompany/companyStep_3/CompanyStep_3.vue";
@@ -45,11 +43,13 @@ export default class CreateCompany extends Vue {
                 this.$router.push('step_2')
                 return
             }
-            if(company.schedules.length === 0){
+            if(company.schedules.filter(item => item.work).length === 0){
                 this.$router.push('step_3')
                 return
             }
-            this.$router.push('step_4')
+            if(this.$route.name != 'step_4'){
+                this.$router.push('step_4')
+            }
         }
     }
 

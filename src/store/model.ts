@@ -7,6 +7,7 @@ export interface State{
     myCompany : Company | null
     mapInfo : MapInfo
     mask : MaskModel
+    locale : LocaleItem
 }
 
 export interface Base{
@@ -33,8 +34,8 @@ export class NewSchedule implements Schedule{
     clockTo : string = '';
     work : boolean = false;
     dayOfWeek: string;
-    constructor(dayOfWeek: DayOfWeek) {
-        this.dayOfWeek = dayOfWeek.toString();
+    constructor(dayOfWeek: string) {
+        this.dayOfWeek = dayOfWeek;
     }
 }
 
@@ -131,13 +132,13 @@ export interface MapSettings{
 }
 
 export enum DayOfWeek{
-    monday = "Понедельник",
-    tuesday = "Вторник",
-    wednesday = "Среда",
-    thursday = "Четверг",
-    friday = "Пятница",
-    saturday = "Суббота",
-    sunday = "Воскресенье"
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday
 }
 
 export interface Errors {
@@ -179,5 +180,31 @@ export class ComboItem implements Combo{
             this.value = '';
         }
 
+    }
+}
+
+export class LocaleItem {
+    /*
+        Ссылка на картинку флага
+     */
+    public imageName: string
+    /*
+        Строка локали
+     */
+    public locale: string
+    /*
+        Строка локали для cookie
+     */
+    public localeCookie: string
+    /*
+        Строка локали для карт яндекс
+     */
+    public localeForMap: string
+
+    constructor(imageName : string, locale : string, localeCookie : string, localeForMap: string) {
+        this.imageName = imageName
+        this.locale = locale
+        this.localeCookie = localeCookie
+        this.localeForMap = localeForMap
     }
 }

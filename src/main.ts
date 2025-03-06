@@ -5,9 +5,8 @@ import Home from "@/components/workPlace/home/Home.vue";
 import EditUser from "@/components/workPlace/editUser/EditUser.vue";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {initStore} from "@/store/store";
-import {Store} from "vuex";
-import {State} from "@/store/model";
 import CreateCompany from "@/components/workPlace/createCompany/СreateCompany.vue";
+import i18n from "@/locales/i18n";
 
 Vue.use(VueRouter);
 
@@ -154,6 +153,7 @@ AuthProvider.init().getAuthorization().then(auth =>{
         new Vue({
           router,
           store,
+          i18n,
           render: (h:any) => h(appComponent),
         }).$mount('#mainDiv')
       }

@@ -1,10 +1,12 @@
 import {Errors, Restriction, Schedule} from "@/store/model";
-import {RequestCombo} from "@/components/comboBox/comboBox";
+import i18n from "@/locales/i18n";
 
 export class RestrictionFactory {
 
     public checkNotNull(fieldName? : string): Function {
-        const error = fieldName ? "Поле "+fieldName+" обязательно для заполнения" : 'Поле обязательно для заполнения'
+        const error = fieldName ?
+            i18n.t("restriction.default.checkNotNull.withField", {fieldName:fieldName}).toString() :
+            i18n.t("restriction.default.checkNotNull.noField").toString()
         return function (value: any): Restriction {
             if (value) {
                 if (value instanceof Array && value.length === 0) {
@@ -23,23 +25,27 @@ export class RestrictionFactory {
                     return new Restriction(true);
                 } else {
                     if (countMin > value.length) {
-                        return new Restriction(false, "Минимальное кол-во символов - " + countMin);
+                        return new Restriction(false, i18n.t("restriction.default.checkCharacterLength.min",
+                            {countMin:countMin}).toString());
                     } else {
-                        return new Restriction(false, "Максимальное кол-во символов - " + countMax);
+                        return new Restriction(false, i18n.t("restriction.default.checkCharacterLength.max",
+                            {countMax:countMax}).toString());
                     }
                 }
 
             } else {
                 if (countMin) {
                     if (countMin > value.length) {
-                        return new Restriction(false, "Минимальное кол-во символов - " + countMin);
+                        return new Restriction(false, i18n.t("restriction.default.checkCharacterLength.min",
+                            {countMin:countMin}).toString());
                     } else {
                         return new Restriction(true);
                     }
                 }
                 if (countMax) {
                     if (value.length > countMax) {
-                        return new Restriction(false, "Минимальное кол-во символов - " + countMin);
+                        return new Restriction(false, i18n.t("restriction.default.checkCharacterLength.min",
+                            {countMin:countMin}).toString());
                     } else {
                         return new Restriction(true);
                     }
@@ -49,10 +55,10 @@ export class RestrictionFactory {
         }
     }
 
-    public checkCharacterRus(errorCustom? : string): Function {
-        const error = errorCustom ? errorCustom : 'Здесь возможны только русские символы'
+    public checkCharacterLetters(errorCustom? : string): Function {
+        const error = errorCustom ? errorCustom : i18n.t("restriction.default.checkCharacterLetters")
         return function (value: string): Restriction {
-            if (/^[а-яА-ЯёЁ]+$/.test(value)) {
+            if (/^[а-яА-ЯёЁa-zA-Z]+$/.test(value)) {
                 return new Restriction(true);
             }
             return new Restriction(false, errorCustom);
@@ -64,7 +70,7 @@ export class RestrictionFactory {
             if (/^([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z_-]+)$/.test(value)) {
                 return new Restriction(true);
             }
-            return new Restriction(false, "Не верный формат почты");
+            return new Restriction(false, i18n.t("restriction.default.checkEmail").toString());
         }
     }
 
@@ -73,12 +79,12 @@ export class RestrictionFactory {
             if (/^(8|\+7)[\d]{10}$/.test(value)) {
                 return new Restriction(true);
             }
-            return new Restriction(false, "Не верный формат телефона");
+            return new Restriction(false, i18n.t("restriction.default.checkPhone").toString());
         }
     }
 
     public checkDate(from?: string, to?: string,fieldName? : string,errorCustom? : string): Function {
-        const field = fieldName ? fieldName : 'Дата'
+        const field = fieldName ? fieldName : i18n.t("restriction.default.checkDate.field")
         return function (value: string): Restriction {
             let fromDate: number | null = null;
             let toDate: number | null = null;
@@ -96,7 +102,11 @@ export class RestrictionFactory {
                     if ((fromDate < date) && (date < toDate)) {
                         return new Restriction(true);
                     } else {
-                        const error = errorCustom ? errorCustom : field + ' должна быть в промежутке от ' + new Date(fromDate).toLocaleDateString() + ' до ' + new Date(toDate).toLocaleDateString();
+                        const error = errorCustom ? errorCustom : field +
+                            i18n.t("restriction.default.checkDate.between").toString() +
+                            new Date(fromDate).toLocaleDateString() +
+                            i18n.t("restriction.default.checkDate.to").toString() +
+                            new Date(toDate).toLocaleDateString();
                         return new Restriction(false, error )
                     }
                 } else {
@@ -104,7 +114,9 @@ export class RestrictionFactory {
                         if (fromDate < date) {
                             return new Restriction(true);
                         } else {
-                            const error = errorCustom ? errorCustom : field + ' должна быть позднее ' + new Date(fromDate).toLocaleDateString();
+                            const error = errorCustom ? errorCustom : field +
+                                i18n.t("restriction.default.checkDate.later").toString() +
+                                new Date(fromDate).toLocaleDateString();
                             return new Restriction(false, error);
                         }
                     } else {
@@ -112,7 +124,9 @@ export class RestrictionFactory {
                             if (date < toDate) {
                                 return new Restriction(true);
                             } else {
-                                const error = errorCustom ? errorCustom : field + ' должна быть не позднее ' + new Date(toDate).toLocaleDateString();
+                                const error = errorCustom ? errorCustom : field +
+                                    i18n.t("restriction.default.checkDate.noLater").toString() +
+                                    new Date(toDate).toLocaleDateString();
                                 return new Restriction(false, error);
                             }
                         }
@@ -131,23 +145,27 @@ export class RestrictionFactory {
                         return new Restriction(true);
                     } else {
                         if (countMin > value.length) {
-                            return new Restriction(false, "Минимальное кол-во элементов - " + countMin);
+                            return new Restriction(false, i18n.t("restriction.default.checkArrayCount.min",
+                                {countMin:countMin}).toString());
                         } else {
-                            return new Restriction(false, "Максимальное кол-во элементов - " + countMax);
+                            return new Restriction(false, i18n.t("restriction.default.checkArrayCount.max",
+                                {countMax:countMax}).toString());
                         }
                     }
 
                 } else {
                     if (countMin) {
                         if (countMin > value.length) {
-                            return new Restriction(false, "Минимальное кол-во элементов - " + countMin);
+                            return new Restriction(false, i18n.t("restriction.default.checkArrayCount.min",
+                                {countMin:countMin}).toString());
                         } else {
                             return new Restriction(true);
                         }
                     }
                     if (countMax) {
                         if (value.length > countMax) {
-                            return new Restriction(false, "Минимальное кол-во элементов - " + countMin);
+                            return new Restriction(false, i18n.t("restriction.default.checkArrayCount.min",
+                                {countMin:countMin}).toString());
                         } else {
                             return new Restriction(true);
                         }
@@ -166,7 +184,8 @@ export class RestrictionFactory {
             if(value.work){
                 if(value.clockFrom && value.clockTo){
                     if(value.clockFrom > value.clockTo){
-                        return new Restriction(false, "Неверный интервал времени в " + value.dayOfWeek);
+                        return new Restriction(false, i18n.t("restriction.default.checkSchedule.interval",
+                            {dayOfWeek:value.dayOfWeek}).toString())
                     }
                     else {
                         return new Restriction(true);
@@ -174,10 +193,12 @@ export class RestrictionFactory {
                 }
                 else {
                     if(!value.clockFrom){
-                        return new Restriction(false, "Заполните время начала рабочего дня в " + value.dayOfWeek);
+                        return new Restriction(false, i18n.t("restriction.default.checkSchedule.start",
+                            {dayOfWeek:value.dayOfWeek}).toString())
                     }
                     if(!value.clockTo){
-                        return new Restriction(false, "Заполните время окончания рабочего дня в " + value.dayOfWeek);
+                        return new Restriction(false, i18n.t("restriction.default.checkSchedule.end",
+                            {dayOfWeek:value.dayOfWeek}).toString())
                     }
                 }
             }

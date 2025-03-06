@@ -1,7 +1,7 @@
 import Vuex, {Store} from "vuex";
 import {
     Authorization, AuthToken, Company,
-    LoadMask,
+    LoadMask, LocaleItem,
     MapInfo,
     MaskModel,
     ModalWindow,
@@ -9,6 +9,8 @@ import {
 } from "@/store/model";
 import axios from "axios";
 import {AuthProvider} from "@/auth/AuthProvider";
+import {convertI18nLocale} from "@/store/util/LocaleUtil";
+import i18n from "@/locales/i18n";
 
 function defaultMapInfo() : MapInfo{
     return {
@@ -22,12 +24,21 @@ function defaultMapInfo() : MapInfo{
     }
 }
 
+function defaultLocale() : LocaleItem{
+    let locale = convertI18nLocale(i18n.locale);
+    if(!locale){
+        locale = new LocaleItem("ru","ru", "ru_RU", "ru_RU");
+    }
+    return locale;
+}
+
 class AppState implements State{
     mapInfo : MapInfo;
     mask : MaskModel;
     createCompany : Company | null
     myCompany : Company | null
     currentPath : string
+    locale : LocaleItem
     constructor() {
         this.currentPath = 'home'
         this.createCompany = null
@@ -37,6 +48,7 @@ class AppState implements State{
             modalWindow: ModalWindow | null = null;
         };
         this.mapInfo = defaultMapInfo();
+        this.locale = defaultLocale();
     }
 }
 
@@ -100,6 +112,11 @@ function createStore(state : State) : Store<State>{
             setCoordsUser(state : State, value : GeolocationCoordinates){
                 state.mapInfo.coords = value
                 console.log("Set user position")
+            },
+            setLocale(state : State, value : LocaleItem){
+                state.locale = value
+                state.mapInfo.settings.lang = value.localeForMap
+                console.log("Set locale")
             }
         },
         getters: {
@@ -117,6 +134,9 @@ function createStore(state : State) : Store<State>{
             },
             settingsMap(state){
                 return state.mapInfo.settings
+            },
+            locale(state){
+                return state.locale
             }
         }
     });

@@ -1,9 +1,11 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import {AuthProvider} from "@/auth/AuthProvider";
+import LocalePicker from "@/components/topMenu/localePicker/LocalePicker.vue";
 
 @Component({
     components: {
+        LocalePicker
     }
 })
 export default class TopPanel extends Vue {

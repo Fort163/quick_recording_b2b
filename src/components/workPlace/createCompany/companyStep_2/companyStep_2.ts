@@ -44,7 +44,7 @@ export default class CompanyStep_2 extends Vue {
             //layout: 'default#imageWithContent',
             imageSize: [43, 43],
             imageOffset: [-15, -43],
-            content: 'Моя компания',
+            content: this.$t('label.createCompany.companyStep_2.myCompany'),
             contentOffset: [0, 45],
             shadow:true,
             iconContent: 'islands#blueFactoryIcon',

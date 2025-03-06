@@ -106,6 +106,7 @@ export class ApiB2B implements Api{
             const provider = AuthProvider.init()
             const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
             config.headers.Authorization =  token;
+            config.withCredentials = true
             return config;
         })
     }

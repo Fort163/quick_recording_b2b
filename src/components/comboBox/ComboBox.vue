@@ -8,7 +8,7 @@ export class RequestCombo {
     <div :class="['combo-display' , disabled ? 'combo-display-disabled' : '']"
          @dblclick="openStore = true" @click="(!multi) ? openStore = true : openStore=true">
       <label v-if="label && ((!currentValue && !multi) || (multi && !openStore && currentValue.length === 0))" :class="['combo-label']">{{label}}</label>
-      <input v-if="openStore && searchOn && !disabled" type="search" :class="'combo-search'" :placeholder="'Поиск'" autofocus v-model="search" @change="searchRequest()" @keyup="searchRequest()"
+      <input v-if="openStore && searchOn && !disabled" type="search" :class="'combo-search'" :placeholder="this.$t('label.search')" autofocus v-model="search" @change="searchRequest()" @keyup="searchRequest()"
              @focusin="openStore = true" @focusout="openStore = false">
       <template v-if="(multi && !openStore && searchOn) || (multi && !searchOn)">
         <transition-group v-for="item in this.currentValue" :key="item[key]" :class="'combo-multi'" name="combo-value" tag="div" @click="(multi) ? openStore = true : openStore=openStore">

@@ -62,7 +62,7 @@ export default class EditUser extends Vue {
             })
         }
         else {
-            this.emailError.push("Заполните Email")
+            this.emailError.push(this.$t('label.editUser.restriction.inputEmail').toString())
         }
     }
 
@@ -80,7 +80,7 @@ export default class EditUser extends Vue {
                     this.emailVerified = response;
                 }
                 else {
-                    this.emailError.push("Неверный код")
+                    this.emailError.push(this.$t('label.editUser.restriction.wrongCode').toString())
                 }
                 this.emailVerified = response;
             })
@@ -99,7 +99,7 @@ export default class EditUser extends Vue {
             })
         }
         else {
-            this.phoneError.push("Введите номер телефона")
+            this.phoneError.push(this.$t('label.editUser.restriction.inputPhone').toString())
         }
     }
 
@@ -116,7 +116,7 @@ export default class EditUser extends Vue {
                     this.phoneVerified = response;
                 }
                 else {
-                    this.phoneError.push("Неверный код")
+                    this.phoneError.push(this.$t('label.editUser.restriction.wrongCode').toString())
                 }
             })
         }
@@ -124,9 +124,9 @@ export default class EditUser extends Vue {
 
     public createGender() : Array<Combo>{
         const result = new Array<Combo>();
-        result.push(new ComboItem("MALE","Мужской"));
-        result.push(new ComboItem("FEMALE","Женский"));
-        result.push(new ComboItem("NOT_DEFINED","Не определено"));
+        result.push(new ComboItem("MALE",this.$t('enums.gender.male').toString()));
+        result.push(new ComboItem("FEMALE",this.$t('enums.gender.female').toString()));
+        result.push(new ComboItem("NOT_DEFINED",this.$t('enums.gender.notDefined').toString()));
         return result;
     }
 
@@ -145,10 +145,10 @@ export default class EditUser extends Vue {
     public submit(){
         this.pageError = new Array<string>();
         if(this.info?.email && !this.emailVerified){
-            this.pageError.push("Подтвердите Email")
+            this.pageError.push(this.$t('label.editUser.restriction.confirmEmail').toString())
         }
         if(this.info?.phoneNumber && !this.phoneVerified){
-            this.pageError.push("Подтвердите телефон")
+            this.pageError.push(this.$t('label.editUser.restriction.confirmPhone').toString())
         }
         const error : Errors = this.restriction.checkError()
         if(error.hasError){
