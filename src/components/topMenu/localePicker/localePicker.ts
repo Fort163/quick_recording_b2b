@@ -24,7 +24,7 @@ export default class LocalePicker extends Vue {
         this.show = false;
         this.value = value;
         this.$i18n.locale = value.locale
-        this.$cookies.set("i18next", value.localeCookie, "expiring time")
+        this.$cookies.set("i18next", value.localeCookie, this.getCookieExpires())
         this.$store.commit("setLocale",value);
     }
 
@@ -44,6 +44,12 @@ export default class LocalePicker extends Vue {
     getImgUrl(locale: string) {
         const images = require.context("../../../assets/locales/", false, /\.png$/)
         return images('./' + locale + ".png")
+    }
+
+    getCookieExpires() : Date {
+        const date = new Date();
+        date.setFullYear(date.getFullYear() + 1)
+        return date;
     }
 
 }
