@@ -9,6 +9,7 @@ import InputText from "@/components/inputText/InputText.vue";
 import Button from "@/components/button/Button.vue";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {ApiB2B} from "@/api/api";
+import {companyApi} from "@/api/apiUtil";
 
 @Component({
     components: {
@@ -26,7 +27,7 @@ export default class CompanyStep_1 extends Vue {
     private pageError : Array<string> = new Array<string>()
 
     public getActivity() : RequestCombo {
-        const uri = this.api?.companyApi('/activity');
+        const uri = companyApi('/activity');
         if(!uri){
             throw new Error("ApiB2B not create")
         }

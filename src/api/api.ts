@@ -14,7 +14,7 @@ export class ApiB2B implements Api{
     private _URL : string;
     private store: Store<any>
     constructor(store: Store<any>) {
-        this._URL = process.env.VUE_APP_BASE_URL_B2B_SERVICE;
+        this._URL = process.env.VUE_APP_BASE_URL_GATEWAY;
         this.store = store;
     }
 
@@ -118,17 +118,6 @@ export class ApiB2B implements Api{
         });
     }
 
-    public userApi(uri:string):string{
-        return process.env.VUE_APP_USER_API + uri;
-    }
-
-    public sessionApi(uri:string):string{
-        return process.env.VUE_APP_SESSION_API + uri;
-    }
-
-    public companyApi(uri:string):string{
-        return process.env.VUE_APP_COMPANY_API + uri;
-    }
 
 }
 

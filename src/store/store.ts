@@ -11,6 +11,7 @@ import axios from "axios";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {convertI18nLocale} from "@/store/util/LocaleUtil";
 import i18n from "@/locales/i18n";
+import {qrB2BApi} from "@/api/apiUtil";
 
 function defaultMapInfo() : MapInfo{
     return {
@@ -58,7 +59,7 @@ function getState() : Promise<State> {
             const provider = AuthProvider.init()
             const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
             uninterceptedAxiosInstance.get<State>(
-                process.env.VUE_APP_BASE_URL_B2B_SERVICE + process.env.VUE_APP_SESSION_API,{
+                process.env.VUE_APP_BASE_URL_GATEWAY + process.env.VUE_APP_SESSION_API,{
                     headers: {
                         'Authorization': token
                     }
@@ -82,7 +83,7 @@ function createStore(state : State) : Store<State>{
                 const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
                 context.commit('setCurrentPath',value);
                 uninterceptedAxiosInstance.post<String>(
-                    process.env.VUE_APP_BASE_URL_B2B_SERVICE + process.env.VUE_APP_SESSION_API,
+                    process.env.VUE_APP_BASE_URL_GATEWAY + qrB2BApi("/session"),
                     context.state, {
                     headers: {
                         'Authorization': token

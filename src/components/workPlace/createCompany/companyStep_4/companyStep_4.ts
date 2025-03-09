@@ -6,6 +6,7 @@ import Button from "@/components/button/Button.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {ApiB2B} from "@/api/api";
+import {companyApi} from "@/api/apiUtil";
 
 @Component({
     components: {
@@ -21,7 +22,7 @@ export default class CompanyStep_4 extends Vue {
     private pageError : Array<string> = new Array<string>()
 
     public submit(){
-        this.api?.postApi<Company>(this.api?.companyApi(''),this.company).then(response => {
+        this.api?.postApi<Company>(companyApi('/company'),this.company).then(response => {
             /*this.$store.commit("setCreateCompany",null);
             this.$store.commit("setMyCompany",response);
             this.$router.push('home')*/
