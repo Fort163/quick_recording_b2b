@@ -208,3 +208,40 @@ export class LocaleItem {
         this.localeForMap = localeForMap
     }
 }
+
+export enum Result{
+    SUCCESS = "SUCCESS",
+    ERROR = "ERROR"
+}
+
+export enum TemplateEnum{
+    REGISTRATION = "REGISTRATION",
+    QR_B2B_CODE = "QR_B2B_CODE",
+    QR_B2B_NOTIFICATION = "QR_B2B_NOTIFICATION"
+}
+
+export interface MailResult{
+    result : Result
+    messageId : string | null
+    notificationId : string | null
+    resultText : string | null
+}
+
+export interface MailCode{
+    email : string
+    template : TemplateEnum | null
+    code : string | null
+}
+
+export class MailCodeClass implements MailCode{
+
+    code: string | null;
+    email: string;
+    template: TemplateEnum | null;
+
+    constructor(email: string, template: TemplateEnum | null, code: string | null) {
+        this.code = code;
+        this.email = email;
+        this.template = template;
+    }
+}
