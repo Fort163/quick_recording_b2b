@@ -59,7 +59,7 @@ function getState() : Promise<State> {
             const provider = AuthProvider.init()
             const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
             uninterceptedAxiosInstance.get<State>(
-                process.env.VUE_APP_BASE_URL_GATEWAY + process.env.VUE_APP_SESSION_API,{
+                process.env.VUE_APP_BASE_URL_GATEWAY + qrB2BApi("/session"),{
                     headers: {
                         'Authorization': token
                     }
@@ -98,6 +98,7 @@ function createStore(state : State) : Store<State>{
         mutations: {
             setCurrentPath (state : State,value : string){
                 state.currentPath = value;
+                console.log("Set path " + value)
             },
             setCreateCompany (state : State,value : Company){
                 state.createCompany = value;
