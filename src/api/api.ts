@@ -26,8 +26,8 @@ export class ApiB2B implements Api{
         this._URL = value;
     }
 
-    getApi<T>(uri: string, param?: URLSearchParams): Promise<T> {
-        this.loadMask(true);
+    getApi<T>(uri: string, param?: URLSearchParams, maskOff?: boolean): Promise<T> {
+        this.loadMask(!maskOff);
         let url = this._URL + uri;
         if(param){
             url = url.concat('?' + param)
@@ -44,8 +44,8 @@ export class ApiB2B implements Api{
             })
     }
 
-    postApi<T>(uri:string,data?:any): Promise<T> {
-        this.loadMask(true);
+    postApi<T>(uri:string,data?:any, maskOff?: boolean): Promise<T> {
+        this.loadMask(!maskOff);
         return axios.post(this._URL + uri,data)
             .then((response:any) => {
                     this.loadMask(false);
@@ -73,8 +73,8 @@ export class ApiB2B implements Api{
             })
     }
 
-    putApi<T>(uri: string,data?:any): Promise<T> {
-        this.loadMask(true);
+    putApi<T>(uri: string,data?:any, maskOff?: boolean): Promise<T> {
+        this.loadMask(!maskOff);
         return axios.put(this._URL + uri,data)
             .then((response: any) => {
                     this.loadMask(false);
@@ -87,8 +87,8 @@ export class ApiB2B implements Api{
             })
     }
 
-    patchApi<T>(uri: string,data?:any): Promise<T> {
-        this.loadMask(true);
+    patchApi<T>(uri: string,data?:any, maskOff?: boolean): Promise<T> {
+        this.loadMask(!maskOff);
         return axios.patch(this._URL + uri,data)
             .then((response: any) => {
                     this.loadMask(false);
