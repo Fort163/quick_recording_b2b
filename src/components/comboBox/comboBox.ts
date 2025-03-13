@@ -222,36 +222,36 @@ export default class ComboBox extends Vue {
             case "GET" : {
                 if (request.needQuery && request.paramQuery) {
                     const param = this.createQueryParam<URLSearchParams>(request);
-                    responsePromise = this.api?.getApi<any>(request.uri, param)
+                    responsePromise = this.api?.getApi<any>(request.uri, param, true)
                 } else {
-                    responsePromise = this.api?.getApi<any>(request.uri)
+                    responsePromise = this.api?.getApi<any>(request.uri, undefined, true)
                 }
                 break;
             }
             case "POST" : {
                 if (request.param) {
                     const param = this.createQueryParam<any>(request);
-                    responsePromise = this.api?.postApi<any>(request.uri, param)
+                    responsePromise = this.api?.postApi<any>(request.uri, param, true)
                 } else {
-                    responsePromise = this.api?.postApi<any>(request.uri)
+                    responsePromise = this.api?.postApi<any>(request.uri, undefined, true)
                 }
                 break;
             }
             case "PUT" : {
                 if (request.param) {
                     const param = this.createQueryParam<FormData>(request);
-                    responsePromise = this.api?.putApi<any>(request.uri, param)
+                    responsePromise = this.api?.putApi<any>(request.uri, param, true)
                 } else {
-                    responsePromise = this.api?.putApi<any>(request.uri)
+                    responsePromise = this.api?.putApi<any>(request.uri, undefined, true)
                 }
                 break;
             }
             case "PATCH" : {
                 if (request.param) {
                     const param = this.createQueryParam<FormData>(request);
-                    responsePromise = this.api?.patchApi<any>(request.uri, param)
+                    responsePromise = this.api?.patchApi<any>(request.uri, param, true)
                 } else {
-                    responsePromise = this.api?.patchApi<any>(request.uri)
+                    responsePromise = this.api?.patchApi<any>(request.uri, undefined, true)
                 }
                 break;
             }
