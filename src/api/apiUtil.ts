@@ -10,8 +10,8 @@ export function companyApi(uri:string, version?: ApiVersion):string{
     return createUri(process.env.VUE_APP_COMPANY_API, uri, version);
 }
 
-export function notifyApi(uri:string, version?: ApiVersion):string{
-    return createUri(process.env.VUE_APP_NOTIFY_API, uri, version);
+export function notificationApi(uri:string, version?: ApiVersion):string{
+    return createUri(process.env.VUE_APP_NOTIFICATION_API, uri, version);
 }
 
 export function createUri(service: string,uri: string, version?: ApiVersion):string{
