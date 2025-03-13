@@ -1,6 +1,16 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Combo, ComboItem, Errors, State, UserInfo, UserInfoChange} from "@/store/model";
+import {
+    Combo,
+    ComboItem,
+    Errors,
+    MailCodeClass,
+    MailResult,
+    Result,
+    TemplateEnum,
+    UserInfo,
+    UserInfoChange
+} from "@/store/model";
 import {Inject} from "vue-property-decorator";
 import {AuthProvider} from "@/auth/AuthProvider";
 import InputText from "@/components/inputText/InputText.vue";
@@ -10,7 +20,7 @@ import InputDate from "@/components/inputDate/InputDate.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {DateUtil} from "@/store/util/DateUtil";
 import ComboBox from "@/components/comboBox/ComboBox.vue";
-import {authApi, notifyApi} from "@/api/apiUtil";
+import {authApi, notificationApi, qrB2BApi} from "@/api/apiUtil";
 
 @Component({
     components: {
@@ -55,11 +65,18 @@ export default class EditUser extends Vue {
         this.emailError = new Array<string>()
         if(this.info && this.info.email) {
             this.emailCodeSendAgain = false;
-            const requestParams = new URLSearchParams();
-            requestParams.append("email", this.info.email);
-            this.api?.getApi<Boolean>(notifyApi('/email/createCode'),requestParams).then(response => {
+            const data = new MailCodeClass(this.info.email, TemplateEnum.QR_B2B_CODE,null)
+            this.api?.postApi<MailResult>(notificationApi('/mail/sender/code'),data).then(response => {
                 this.timerEmail()
-                this.emailCodeSend = response;
+                if(response.result == Result.SUCCESS){
+                    this.emailCodeSend = true;
+                }
+                else {
+                    this.emailCodeSend = false;
+                    if(response.resultText) {
+                        this.emailError.push(response.resultText)
+                    }
+                }
             })
         }
         else {
@@ -68,12 +85,9 @@ export default class EditUser extends Vue {
     }
 
     public checkCodeEmail(){
-
         if(this.info && this.info.email && this.emailCode) {
-            const requestParams = new URLSearchParams();
-            requestParams.append("email", this.info.email);
-            requestParams.append("code", this.emailCode);
-            this.api?.getApi<boolean>(notifyApi('/email/checkCode'),requestParams).then(response => {
+            const data = new MailCodeClass(this.info.email, null,this.emailCode);
+            this.api?.postApi<boolean>(notificationApi('/mail/sender/code/check'),data).then(response => {
                 this.emailError = new Array<string>()
                 if(response){
                     this.emailCodeSend = false;
@@ -94,7 +108,7 @@ export default class EditUser extends Vue {
             this.phoneCodeSendAgain = false;
             const requestParams = new URLSearchParams();
             requestParams.append("phone", this.info.phoneNumber);
-            this.api?.getApi<Boolean>(notifyApi('/phone/createCode'),requestParams).then(response => {
+            this.api?.getApi<Boolean>(qrB2BApi('/user/createCodePhone'),requestParams).then(response => {
                 this.timerPhone()
                 this.phoneCodeSend = response;
             })
@@ -109,7 +123,7 @@ export default class EditUser extends Vue {
             const requestParams = new URLSearchParams();
             requestParams.append("phone", this.info.phoneNumber);
             requestParams.append("code", this.phoneCode);
-            this.api?.getApi<boolean>(notifyApi('/phone/checkCode'),requestParams).then(response => {
+            this.api?.getApi<boolean>(qrB2BApi('/user/checkCodePhone'),requestParams).then(response => {
                 this.phoneError = new Array<string>()
                 if(response){
                     this.phoneCodeSend = false;
@@ -161,7 +175,7 @@ export default class EditUser extends Vue {
             if(this.genderCombo && this.info) {
                 this.info.gender = this.genderCombo.key
             }
-            this.api?.patchApi<UserInfo>(authApi('/user'),this.info).then(response => {
+            this.api?.putApi<UserInfo>(authApi('/user/patch'),this.info).then(response => {
                 console.log(response)
                 AuthProvider.init().userInfo = response
                 this.$router.push('/')
