@@ -220,6 +220,37 @@ export enum TemplateEnum{
     QR_B2B_NOTIFICATION = "QR_B2B_NOTIFICATION"
 }
 
+export enum MessageType{
+    INFO = "INFO",
+    LOGOUT = "LOGOUT",
+    WARNING = "WARNING",
+    ACTION = "ACTION",
+    REDIRECT = "REDIRECT"
+}
+
+export interface NotificationMessage{
+    fromUser : string | null
+    toUser : string | null
+    sendType : SendType
+    messageType : MessageType
+    message : string | null
+    jsonObject : string | null
+    path : string | null
+    received : boolean
+}
+
+export interface MessageResult{
+    result : Result
+    messageId : string | null
+    resultText : string | null
+}
+
+export enum SendType {
+    TO_USER = "TO_USER",
+    ALL = "ALL",
+}
+
+
 export interface MailResult{
     result : Result
     messageId : string | null
