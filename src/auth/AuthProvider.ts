@@ -196,6 +196,7 @@ export class AuthProvider{
         this.token = null;
         this._userInfo = null;
         this.authorization = null;
+        document.cookie = 'main_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
 }
