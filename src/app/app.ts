@@ -2,16 +2,17 @@ import Vue from 'vue'
 import Vuex from "vuex";
 import Component from "vue-class-component";
 import TopPanel from "@/components/topMenu/topPanel/TopPanel.vue";
-import {Provide} from "vue-property-decorator";
+import {Provide, Watch} from "vue-property-decorator";
 import WorkPlace from "@/components/workPlace/WorkPlace.vue";
 import VueCookies from "vue-cookies";
 import {ApiB2B} from "@/api/api";
 import ModalMask from "@/components/modal/modal/mask/ModalMask.vue";
 import ScrollMenu from "@/components/scrollMenu/ScrollMenu.vue";
 import BottomBar from "@/components/bottomBar/BottomBar.vue";
-import i18n from "@/locales/i18n";
 import {convertCookieLocale} from "@/store/util/LocaleUtil";
-import {LocaleItem} from "@/store/model";
+import {LocaleItem, NotificationMessage} from "@/store/model";
+import {ApiWS} from "@/api/apiWS";
+import {notificationApi} from "@/api/apiUtil";
 
 Vue.use(Vuex);
 Vue.use(VueCookies);
@@ -27,9 +28,25 @@ Vue.use(VueCookies);
 export default class App extends Vue {
 
     @Provide('api') api: ApiB2B = new ApiB2B(this.$store);
+    @Provide('socket') mainSocket: ApiWS = new ApiWS();
+
+    @Watch('connect')
+    socketConnect(val: boolean, oldVal: boolean) {
+        this.socket?.subscribe('/user/qr-message/notification', message => {
+            console.warn("User");
+            const notification : NotificationMessage= <NotificationMessage>JSON.parse(message.body)
+            console.error(notification);
+        });
+        this.socket?.subscribe('/qr-message/notification', message => {
+            console.warn("All");
+            const notification : NotificationMessage= <NotificationMessage>JSON.parse(message.body)
+            console.error(notification);
+        });
+    }
 
     created(){
         this.api.init();
+        this.mainSocket.connect();
         const locale : LocaleItem = this.$store.getters.locale;
         if(locale){
             this.$i18n.locale = locale.locale
@@ -48,6 +65,14 @@ export default class App extends Vue {
         }, err => {
             console.error("Position user not set");
         })
+    }
+
+    get socket() {
+        return this.mainSocket?.socket
+    }
+
+    get connect() {
+        return this.mainSocket?.isConnect;
     }
 
 }
