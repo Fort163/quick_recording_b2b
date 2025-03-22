@@ -5,6 +5,7 @@
     <ScrollMenu/>
     <WorkPlace/>
     <BottomBar/>
+    <NotificationMenu/>
   </div>
 </template>
 
