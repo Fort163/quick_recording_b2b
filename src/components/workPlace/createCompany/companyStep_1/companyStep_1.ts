@@ -7,7 +7,6 @@ import {RequestCombo} from "@/components/comboBox/comboBox";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import InputText from "@/components/inputText/InputText.vue";
 import Button from "@/components/button/Button.vue";
-import {AuthProvider} from "@/auth/AuthProvider";
 import {ApiB2B} from "@/api/api";
 import {companyApi} from "@/api/apiUtil";
 
