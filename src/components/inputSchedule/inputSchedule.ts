@@ -33,6 +33,15 @@ export default class InputSchedule extends Vue {
             this.currentValue = this.value
             this.stringValue = this.getValue(this.value.dayOfWeek)
         }
+        if(this.restrictions?.length){
+            this.errors = new Array<Restriction>();
+            this.restrictions?.forEach(func => {
+                const rest : Restriction = func.call(this.currentValue,this.currentValue);
+                if(!rest.valid){
+                    this.errors.push(rest);
+                }
+            })
+        }
     }
 
     mounted(){

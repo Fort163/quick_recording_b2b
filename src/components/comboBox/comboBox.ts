@@ -109,9 +109,17 @@ export default class ComboBox extends Vue {
                 this.store.push(item);
             })
         }
-
         if (this.request) {
             this.sendRequest(this.request)
+        }
+        if(this.restrictions?.length){
+            this.errors = new Array<Restriction>()
+            this.restrictions?.forEach(func => {
+                const rest: Restriction = func.call(this.currentValue, this.currentValue);
+                if (!rest.valid) {
+                    this.errors.push(rest);
+                }
+            })
         }
     }
 

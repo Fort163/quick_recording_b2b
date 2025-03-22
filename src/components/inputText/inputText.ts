@@ -28,6 +28,15 @@ export default class InputText extends Vue {
         if(this.value) {
             this.currentValue = this.value
         }
+        if(this.restrictions?.length){
+            this.errors = new Array<Restriction>();
+            this.restrictions?.forEach(func => {
+                const rest : Restriction = func.call(this.currentValue,this.currentValue);
+                if(!rest.valid){
+                    this.errors.push(rest);
+                }
+            })
+        }
     }
 
     mounted(){

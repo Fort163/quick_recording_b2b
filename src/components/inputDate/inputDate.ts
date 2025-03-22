@@ -33,6 +33,15 @@ export default class InputDate extends Vue {
                 this.currentValue = this.util.dateFormat(date, DateUtil.WEB_FORMAT)
             }
         }
+        if(this.restrictions?.length){
+            this.errors = new Array<Restriction>();
+            this.restrictions?.forEach(func => {
+                const rest : Restriction = func.call(this.currentValue,this.currentValue);
+                if(!rest.valid){
+                    this.errors.push(rest);
+                }
+            })
+        }
     }
 
     mounted(){
