@@ -186,6 +186,11 @@ export class AuthProvider{
                 ).then(tokenData =>{
                     this.token = tokenData.data;
                     resolve(true)
+                }).catch(reason => {
+                    this.getAuthorization().then(value => {
+                        this.token = value.token
+                        resolve(true)
+                    })
                 });
             },Number.parseInt(<string>this.token?.expires_in))
             })

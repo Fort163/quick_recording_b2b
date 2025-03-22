@@ -1,11 +1,13 @@
 import Vuex, {Store} from "vuex";
 import {
-    Authorization, AuthToken, Company,
-    LoadMask, LocaleItem,
+    Company,
+    LoadMask,
+    LocaleItem,
     MapInfo,
     MaskModel,
     ModalWindow,
-    State, UserInfo
+    NotificationMessage,
+    State
 } from "@/store/model";
 import axios from "axios";
 import {AuthProvider} from "@/auth/AuthProvider";
@@ -40,6 +42,7 @@ class AppState implements State{
     myCompany : Company | null
     currentPath : string
     locale : LocaleItem
+    notifications: Array<NotificationMessage>
     constructor() {
         this.currentPath = 'home'
         this.createCompany = null
@@ -50,6 +53,7 @@ class AppState implements State{
         };
         this.mapInfo = defaultMapInfo();
         this.locale = defaultLocale();
+        this.notifications = new Array<NotificationMessage>();
     }
 }
 
@@ -82,9 +86,11 @@ function createStore(state : State) : Store<State>{
                 const provider = AuthProvider.init()
                 const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
                 context.commit('setCurrentPath',value);
+                const sendState = Object.assign(new AppState(),context.state);
+                sendState.notifications = [];
                 uninterceptedAxiosInstance.post<String>(
                     process.env.VUE_APP_BASE_URL_GATEWAY + qrB2BApi("/session"),
-                    context.state, {
+                    sendState, {
                     headers: {
                         'Authorization': token
                     }
@@ -119,6 +125,10 @@ function createStore(state : State) : Store<State>{
                 state.locale = value
                 state.mapInfo.settings.lang = value.localeForMap
                 console.log("Set locale")
+            },
+            setNotification(state : State, value : NotificationMessage){
+                state.notifications.push(value)
+                console.log("Set notification")
             }
         },
         getters: {
@@ -139,6 +149,9 @@ function createStore(state : State) : Store<State>{
             },
             locale(state){
                 return state.locale
+            },
+            notifications(state){
+                return state.notifications
             }
         }
     });

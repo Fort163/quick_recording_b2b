@@ -8,6 +8,7 @@ export interface State{
     mapInfo : MapInfo
     mask : MaskModel
     locale : LocaleItem
+    notifications: Array<NotificationMessage>
 }
 
 export interface Base{
@@ -228,12 +229,13 @@ export enum MessageType{
     REDIRECT = "REDIRECT"
 }
 
-export interface NotificationMessage{
+export interface NotificationMessage extends Base{
     fromUser : string | null
     toUser : string | null
     sendType : SendType
     messageType : MessageType
-    message : string | null
+    message : string
+    messageCode : string | null
     jsonObject : string | null
     path : string | null
     received : boolean
