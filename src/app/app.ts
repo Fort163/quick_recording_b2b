@@ -9,10 +9,10 @@ import {ApiB2B} from "@/api/api";
 import ModalMask from "@/components/modal/modal/mask/ModalMask.vue";
 import ScrollMenu from "@/components/scrollMenu/ScrollMenu.vue";
 import BottomBar from "@/components/bottomBar/BottomBar.vue";
+import NotificationMenu from "@/components/notificationMenu/NotificationMenu.vue";
 import {convertCookieLocale} from "@/store/util/LocaleUtil";
 import {LocaleItem, NotificationMessage} from "@/store/model";
 import {ApiWS} from "@/api/apiWS";
-import {notificationApi} from "@/api/apiUtil";
 
 Vue.use(Vuex);
 Vue.use(VueCookies);
@@ -22,7 +22,8 @@ Vue.use(VueCookies);
         TopPanel,
         WorkPlace,
         ScrollMenu,
-        BottomBar
+        BottomBar,
+        NotificationMenu
     }
 })
 export default class App extends Vue {
@@ -32,15 +33,13 @@ export default class App extends Vue {
 
     @Watch('connect')
     socketConnect(val: boolean, oldVal: boolean) {
-        this.socket?.subscribe('/user/qr-message/notification', message => {
-            console.warn("User");
+        this.socket?.subscribe('/user/queue/notification', message => {
             const notification : NotificationMessage= <NotificationMessage>JSON.parse(message.body)
-            console.error(notification);
+            this.$store.commit("setNotification",notification);
         });
-        this.socket?.subscribe('/qr-message/notification', message => {
-            console.warn("All");
+        this.socket?.subscribe('/topic/notification', message => {
             const notification : NotificationMessage= <NotificationMessage>JSON.parse(message.body)
-            console.error(notification);
+            this.$store.commit("setNotification",notification);
         });
     }
 
