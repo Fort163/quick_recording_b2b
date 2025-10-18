@@ -1,7 +1,10 @@
 import axios from "axios";
 import {Store} from "vuex";
-import {LoadMask} from "@/store/model";
 import {AuthProvider} from "@/auth/AuthProvider";
+import {ApiError} from "@/models/error";
+import {ErrorWindow, LoadMask} from "@/models/modal";
+import VueI18n from "vue-i18n";
+import {ApiException} from "@/exception/apiException";
 
 interface Api {
     getApi<T>(uri:string):Promise<T>,
@@ -13,9 +16,12 @@ interface Api {
 export class ApiB2B implements Api{
     private _URL : string;
     private store: Store<any>
-    constructor(store: Store<any>) {
+    private translate : VueI18n
+
+    constructor(store: Store<any>, translate : VueI18n ) {
         this._URL = process.env.VUE_APP_BASE_URL_GATEWAY;
         this.store = store;
+        this.translate = translate;
     }
 
     get URL(): string {
@@ -40,7 +46,9 @@ export class ApiB2B implements Api{
             )
             .catch((error) => {
                 this.loadMask(false);
-                console.log('Ошибка! Не могу связаться с API. ' + error);
+                const response = error.response;
+                const apiError : ApiError = <ApiError>response.data;
+                this.handleError(apiError, response.status)
             })
     }
 
@@ -54,7 +62,9 @@ export class ApiB2B implements Api{
             )
             .catch((error: any) => {
                 this.loadMask(false);
-                console.log('Ошибка! Не могу связаться с API. ' + error);
+                const response = error.response;
+                const apiError : ApiError = <ApiError>response.data;
+                this.handleError(apiError, response.status)
             })
 
     }
@@ -69,7 +79,9 @@ export class ApiB2B implements Api{
             )
             .catch((error: any) => {
                 this.loadMask(false);
-                console.log('Ошибка! Не могу связаться с API. ' + error);
+                const response = error.response;
+                const apiError : ApiError = <ApiError>response.data;
+                this.handleError(apiError, response.status)
             })
     }
 
@@ -77,13 +89,16 @@ export class ApiB2B implements Api{
         this.loadMask(!maskOff);
         return axios.put(this._URL + uri,data)
             .then((response: any) => {
+                    console.warn(response)
                     this.loadMask(false);
                     return response.data;
                 }
             )
             .catch((error) => {
                 this.loadMask(false);
-                console.log('Ошибка! Не могу связаться с API. ' + error);
+                const response = error.response;
+                const apiError : ApiError = <ApiError>response.data;
+                this.handleError(apiError, response.status)
             })
     }
 
@@ -97,7 +112,9 @@ export class ApiB2B implements Api{
             )
             .catch((error) => {
                 this.loadMask(false);
-                console.log('Ошибка! Не могу связаться с API. ' + error);
+                const response = error.response;
+                const apiError : ApiError = <ApiError>response.data;
+                this.handleError(apiError, response.status)
             })
     }
 
@@ -111,6 +128,19 @@ export class ApiB2B implements Api{
         })
     }
 
+    private handleError(error : ApiError, status: number){
+        console.log(error);
+        switch (status){
+            case 403 : {
+                this.errorWindow(error, true);
+                throw new ApiException(error, status);
+                break;
+            }
+            default: {
+                throw new ApiException(error, status)
+            }
+        }
+    }
 
     private loadMask(value: boolean) {
         this.store.commit('setLoadMask', new class implements LoadMask {
@@ -118,6 +148,12 @@ export class ApiB2B implements Api{
         });
     }
 
+    private errorWindow( error : ApiError, show: boolean) {
+        this.store.commit('setErrorWindow', new class implements ErrorWindow {
+            error: ApiError = error;
+            show: boolean = show;
+        });
+    }
 
 }
 
