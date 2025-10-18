@@ -11,8 +11,9 @@ import ScrollMenu from "@/components/scrollMenu/ScrollMenu.vue";
 import BottomBar from "@/components/bottomBar/BottomBar.vue";
 import NotificationMenu from "@/components/notificationMenu/NotificationMenu.vue";
 import {convertCookieLocale} from "@/store/util/LocaleUtil";
-import {LocaleItem, NotificationMessage} from "@/store/model";
 import {ApiWS} from "@/api/apiWS";
+import {NotificationMessage} from "@/models/notification-service";
+import {LocaleItem} from "@/models/main";
 
 Vue.use(Vuex);
 Vue.use(VueCookies);
@@ -28,7 +29,7 @@ Vue.use(VueCookies);
 })
 export default class App extends Vue {
 
-    @Provide('api') api: ApiB2B = new ApiB2B(this.$store);
+    @Provide('api') api: ApiB2B = new ApiB2B(this.$store, this.$i18n);
     @Provide('socket') mainSocket: ApiWS = new ApiWS();
 
     @Watch('connect')
