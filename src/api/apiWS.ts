@@ -55,7 +55,7 @@ export class ApiWS {
     public connect(){
         this._ws = new SockJS(this.URL);
         this._socket = Stomp.over(this._ws);
-        //this._socket.debug = () => {}
+        this._socket.debug = () => {}
         this._socket.connect( {
             Authorization : 'Bearer ' + this.accessToken,
         },frame => {
