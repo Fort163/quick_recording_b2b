@@ -7,7 +7,7 @@
                      restriction.checkCharacterLength(3)
                    ]"
                  v-model="company.name" style="width: 100%"/>
-      <ComboBox :searchOn="true" v-model="company.activity" :restrictions="[
+      <ComboBox :searchOn="true" v-model="company.activities" :restrictions="[
                   restriction.checkNotNull(this.$t('label.createCompany.companyStep_1.restriction.activity.fieldName').toString())
                 ]"
                 :label="this.$t('label.createCompany.companyStep_1.field.activityPlaceholder')" :request="getActivity()" style="width: 100%; height: 50px" />
