@@ -1,6 +1,6 @@
 <template>
   <div :style="'{width:100%;height:100%}'">
-    <div v-if="this.showLoadMask" :class="'modalMask'">
+    <div v-if="this.showLoadMask || this.showErrorWindow" :class="'modalMask'">
       <div v-if="this.showLoadMask" :class="'animation'">
         <span style="--i:1;"></span>
         <span style="--i:2;"></span>
@@ -23,6 +23,19 @@
         <span style="--i:19;"></span>
         <span style="--i:20;"></span>
       </div>
+      <transition name="error-window-animation">
+        <div key="windowError" v-if="this.showErrorWindow" :class="'errorWindow'">
+          <div :class="'errorWindowTopPanel'">
+            <Button :image="'close.png'" style="padding: 1%" :size="'15px'" :backgroundSize="'100%'" @click="closeErrorWindow()"/>
+          </div>
+          <div :class="'errorWindowBody'">
+            {{ this.errorWindow.error.message }}
+          </div>
+          <div :class="'errorWindowBottomPanel'">
+
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
