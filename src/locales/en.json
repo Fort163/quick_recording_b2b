@@ -23,6 +23,11 @@
         "isWorkDay": "Working day?"
       }
     },
+    "scheduleComponent": {
+      "button": {
+        "repeat": "Repeat"
+      }
+    },
     "editUser": {
       "field": {
         "lastName": "Surname",

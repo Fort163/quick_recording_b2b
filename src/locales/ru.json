@@ -23,6 +23,11 @@
         "isWorkDay": "Рабочий день?"
       }
     },
+    "scheduleComponent": {
+      "button": {
+        "repeat": "Повторить"
+      }
+    },
     "editUser": {
       "field": {
         "lastName": "Фамилия",
