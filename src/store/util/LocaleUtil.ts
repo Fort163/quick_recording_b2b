@@ -1,4 +1,4 @@
-import {LocaleItem} from "@/store/model";
+import {LocaleItem} from "@/models/main";
 
 export function convertI18nLocale(locale: string): LocaleItem | null {
     switch (locale) {

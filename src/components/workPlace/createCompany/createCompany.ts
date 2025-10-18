@@ -1,11 +1,11 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Activity, Company, Schedule} from "@/store/model";
 import CompanyStep_1 from "@/components/workPlace/createCompany/companyStep_1/CompanyStep_1.vue";
 import CompanyStep_2 from "@/components/workPlace/createCompany/companyStep_2/CompanyStep_2.vue";
 import CompanyStep_3 from "@/components/workPlace/createCompany/companyStep_3/CompanyStep_3.vue";
 import CompanyStep_4 from "@/components/workPlace/createCompany/companyStep_4/CompanyStep_4.vue";
 import {GeocoderResult} from "@/structure/map/ymapsModel";
+import {Activity, Company, Schedule} from "@/models/company-service";
 
 @Component({
     components: {
@@ -35,7 +35,7 @@ export default class CreateCompany extends Vue {
         }
         else {
             const company : Company = this.$store.getters.createCompany
-            if(!company.name && company.activity.length === 0){
+            if(!company.name && company.activities.length === 0){
                 this.$router.push('step_1')
                 return
             }
@@ -56,14 +56,19 @@ export default class CreateCompany extends Vue {
 }
 
 class CompanyNew implements Company{
-    activity: Array<Activity>;
+    activities: Array<Activity>;
     geoPosition: GeocoderResult | null;
     name: string | null;
     schedules: Array<Schedule>;
     uuid: string | null;
+    createdBy: string | undefined;
+    createdWhen: string | undefined;
+    isActive: boolean = true;
+    updatedBy: string | undefined;
+    updatedWhen: string | undefined;
 
     constructor() {
-        this.activity = new Array<Activity>()
+        this.activities = new Array<Activity>()
         this.geoPosition = null
         this.name = null
         this.schedules = new Array<Schedule>()

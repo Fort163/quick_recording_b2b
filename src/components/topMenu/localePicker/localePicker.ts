@@ -1,7 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {LocaleItem} from "@/store/model";
 import {convertI18nLocale} from "@/store/util/LocaleUtil";
+import {LocaleItem} from "@/models/main";
 
 @Component({
     components: {

@@ -1,6 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import {Authorization, AuthToken, ModalWindow, UserInfo} from "@/store/model";
-import {control} from "yandex-maps";
+import {Authorization, AuthToken, UserInfo} from "@/models/authorization";
 
 export class AuthProvider{
 

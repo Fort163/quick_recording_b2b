@@ -1,6 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {MessageType, NotificationMessage, SendType} from "@/store/model";
+import {NotificationMessage} from "@/models/notification-service";
+import {MessageType} from "@/models/message";
 
 @Component({
     components: {

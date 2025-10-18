@@ -1,16 +1,5 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {
-    Combo,
-    ComboItem,
-    Errors,
-    MailCodeClass,
-    MailResult,
-    Result,
-    TemplateEnum,
-    UserInfo,
-    UserInfoChange
-} from "@/store/model";
 import {Inject} from "vue-property-decorator";
 import {AuthProvider} from "@/auth/AuthProvider";
 import InputText from "@/components/inputText/InputText.vue";
@@ -21,6 +10,12 @@ import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {DateUtil} from "@/store/util/DateUtil";
 import ComboBox from "@/components/comboBox/ComboBox.vue";
 import {authApi, notificationApi, qrB2BApi} from "@/api/apiUtil";
+import {UserInfoChange} from "@/models/user-service";
+import {Combo, ComboItem} from "@/models/component";
+import {UserInfo} from "@/models/authorization";
+import {MailCodeClass, MailResult} from "@/models/notification-service";
+import {Result, TemplateEnum} from "@/models/main";
+import {Errors} from "@/models/error";
 
 @Component({
     components: {
@@ -165,9 +160,9 @@ export default class EditUser extends Vue {
         if(this.info?.phoneNumber && !this.phoneVerified){
             this.pageError.push(this.$t('label.editUser.restriction.confirmPhone').toString())
         }
-        const error : Errors = this.restriction.checkError()
+        const error : Errors = this.restriction.checkError(this)
         if(error.hasError){
-            error.errors.forEach(item => {
+            error.messages.forEach(item => {
                 this.pageError.push(item)
             })
         }
@@ -179,6 +174,9 @@ export default class EditUser extends Vue {
                 console.log(response)
                 AuthProvider.init().userInfo = response
                 this.$router.push('/')
+            }).catch(error => {
+                console.log(error)
+                console.log("Normal catch")
             });
         }
     }

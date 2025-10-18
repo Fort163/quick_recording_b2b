@@ -1,19 +1,13 @@
 import Vuex, {Store} from "vuex";
-import {
-    Company,
-    LoadMask,
-    LocaleItem,
-    MapInfo,
-    MaskModel,
-    ModalWindow,
-    NotificationMessage,
-    State
-} from "@/store/model";
 import axios from "axios";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {convertI18nLocale} from "@/store/util/LocaleUtil";
 import i18n from "@/locales/i18n";
 import {qrB2BApi} from "@/api/apiUtil";
+import {LocaleItem, MapInfo, State} from "@/models/main";
+import {ErrorWindow, LoadMask, MaskModel, ModalWindow} from "@/models/modal";
+import {Company} from "@/models/company-service";
+import {NotificationMessage} from "@/models/notification-service";
 
 function defaultMapInfo() : MapInfo{
     return {
@@ -48,6 +42,7 @@ class AppState implements State{
         this.createCompany = null
         this.myCompany = null
         this.mask = new class implements MaskModel {
+            errorWindow: ErrorWindow | null = null;
             loadMask: LoadMask | null = null;
             modalWindow: ModalWindow | null = null;
         };
@@ -69,7 +64,12 @@ function getState() : Promise<State> {
                     }
                 }
             ).then(response => {
-                resolve(response.data);
+                if(response.data) {
+                    resolve(response.data);
+                }
+                else {
+                    resolve(new AppState());
+                }
             }).catch(reason => {
                 resolve(new AppState());
             });
@@ -116,6 +116,14 @@ function createStore(state : State) : Store<State>{
             setLoadMask (state : State,value : LoadMask) {
                 state.mask.loadMask = value;
                 console.log("Load mask : " + (value.show?'On':'Off'))
+            },
+            setModalWindow (state : State,value : ModalWindow) {
+                state.mask.modalWindow = value;
+                console.log("Modal window : " + (value.show?'On':'Off'))
+            },
+            setErrorWindow (state : State,value : ErrorWindow | null) {
+                state.mask.errorWindow = value;
+                console.log("Error window : " + (value?.show ? 'On':'Off'))
             },
             setCoordsUser(state : State, value : GeolocationCoordinates){
                 state.mapInfo.coords = value

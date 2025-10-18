@@ -1,6 +1,5 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Combo, Company, Errors, State, UserInfo} from "@/store/model";
 import {Inject} from "vue-property-decorator";
 import ComboBox from "@/components/comboBox/ComboBox.vue";
 import {RequestCombo} from "@/components/comboBox/comboBox";
@@ -9,6 +8,8 @@ import InputText from "@/components/inputText/InputText.vue";
 import Button from "@/components/button/Button.vue";
 import {ApiB2B} from "@/api/api";
 import {companyApi} from "@/api/apiUtil";
+import {Company} from "@/models/company-service";
+import {Errors} from "@/models/error";
 
 @Component({
     components: {
@@ -35,9 +36,9 @@ export default class CompanyStep_1 extends Vue {
 
     public submit(){
         this.pageError = new Array<string>();
-        const error : Errors = this.restriction.checkError()
+        const error : Errors = this.restriction.checkError(this)
         if(error.hasError){
-            error.errors.forEach(item => {
+            error.messages.forEach(item => {
                 this.pageError.push(item)
             })
         }

@@ -1,12 +1,12 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Company, MapSettings, State} from "@/store/model";
-import {Inject} from "vue-property-decorator";
 import Button from "@/components/button/Button.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 // @ts-ignore
 import {loadYmap, yandexMap, ymapMarker} from 'vue-yandex-maps'
 import {GeocoderResultDefault} from "@/structure/map/ymapsModel";
+import {Company} from "@/models/company-service";
+import {MapSettings} from "@/models/main";
 
 @Component({
     components: {

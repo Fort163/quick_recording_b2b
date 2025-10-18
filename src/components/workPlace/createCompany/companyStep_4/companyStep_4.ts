@@ -1,12 +1,12 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Company, Errors, Schedule, State, UserInfo} from "@/store/model";
 import {Inject} from "vue-property-decorator";
 import Button from "@/components/button/Button.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {ApiB2B} from "@/api/api";
 import {companyApi} from "@/api/apiUtil";
+import {Company, Schedule} from "@/models/company-service";
 
 @Component({
     components: {

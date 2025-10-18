@@ -1,4 +1,4 @@
-import {Base} from "@/store/model";
+import {Base} from "@/models/main";
 
 export class GeocoderResultDefault implements GeocoderResult{
     uuid : string | null

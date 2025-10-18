@@ -1,7 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import {AuthProvider} from "@/auth/AuthProvider";
-import {Authority} from "@/store/model";
+import {Authority} from "@/models/authorization";
 
 @Component({
     components: {
