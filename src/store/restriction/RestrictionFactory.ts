@@ -1,5 +1,9 @@
-import {Errors, Restriction, Schedule} from "@/store/model";
+
 import i18n from "@/locales/i18n";
+import Vue from "vue";
+import {CheckComponent} from "@/store/component";
+import {Errors, Restriction} from "@/models/error";
+import {Schedule} from "@/models/company-service";
 
 export class RestrictionFactory {
 
@@ -182,10 +186,11 @@ export class RestrictionFactory {
     public checkSchedule(): Function {
         return function (value: Schedule): Restriction {
             if(value.work){
+                const day = <string>i18n.t("enums.dayOfWeek."+value.dayOfWeek)
                 if(value.clockFrom && value.clockTo){
                     if(value.clockFrom > value.clockTo){
                         return new Restriction(false, i18n.t("restriction.default.checkSchedule.interval",
-                            {dayOfWeek:value.dayOfWeek}).toString())
+                            {dayOfWeek:day}).toString())
                     }
                     else {
                         return new Restriction(true);
@@ -194,11 +199,11 @@ export class RestrictionFactory {
                 else {
                     if(!value.clockFrom){
                         return new Restriction(false, i18n.t("restriction.default.checkSchedule.start",
-                            {dayOfWeek:value.dayOfWeek}).toString())
+                            {dayOfWeek:day}).toString())
                     }
                     if(!value.clockTo){
                         return new Restriction(false, i18n.t("restriction.default.checkSchedule.end",
-                            {dayOfWeek:value.dayOfWeek}).toString())
+                            {dayOfWeek:day}).toString())
                     }
                 }
             }
@@ -206,33 +211,40 @@ export class RestrictionFactory {
         }
     }
 
-    public checkError(): PageError {
-        const elementNodeListOf = document.querySelectorAll('[errors]');
-        const errors = new Array<string>()
-        elementNodeListOf.forEach(item => {
-            if(item.tagName !== 'BUTTON') {
-                const atrr: Attr | null = item.getAttributeNode("errors")
-                if (atrr) {
-                    if (atrr.value.length > 0) {
-                        errors.push(atrr.value)
+    public checkError(vue : Vue): PageError {
+        const result : Array<Restriction> = this.findRestriction(vue);
+        return new PageError(result);
+    }
+
+    private findRestriction(vue : Vue) : Array<Restriction> {
+        const result : Array<Restriction> = new Array<Restriction>();
+        vue.$children.forEach(item => {
+            if(item instanceof CheckComponent){
+                item.check().forEach(restriction => {
+                    if(!restriction.valid){
+                        result.push(restriction);
                     }
-                }
+
+                })
             }
+            this.findRestriction(item).forEach(restriction => {
+                result.push(restriction);
+            })
         })
-        return new PageError(errors.length, errors, errors.length !== 0);
+        return result;
     }
 
 }
 
-class PageError implements Errors{
+class PageError implements Errors {
     private _count: number
-    private _errors: Array<string>
+    private _errors: Array<Restriction>
     private _hasError: boolean
 
-    constructor(count: number, errors: Array<string>, hasError: boolean) {
-        this._count = count;
+    constructor(errors: Array<Restriction>) {
+        this._count = errors.length;
         this._errors = errors;
-        this._hasError = hasError;
+        this._hasError = errors.length > 0;
     }
 
 
@@ -240,11 +252,23 @@ class PageError implements Errors{
         return this._count;
     }
 
-    get errors(): Array<string> {
+    get errors(): Array<Restriction> {
         return this._errors;
     }
 
     get hasError(): boolean {
         return this._hasError;
     }
+
+    get messages(): Array<string> {
+        return this.errors.map<string>(item => {
+            if(item.error){
+                return item.error;
+            }
+            else {
+                return '';
+            }
+        })
+    }
+
 }
