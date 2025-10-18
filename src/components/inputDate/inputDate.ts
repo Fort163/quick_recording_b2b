@@ -1,13 +1,12 @@
-import Vue from 'vue'
 import Component from "vue-class-component";
 import {Prop} from "vue-property-decorator";
-import {Restriction} from "@/store/model";
 import {DateUtil} from "@/store/util/DateUtil";
+import {CheckComponent} from "@/store/component";
 @Component({
     components: {
     }
 })
-export default class InputDate extends Vue {
+export default class InputDate extends CheckComponent {
 
     @Prop() private color : String | undefined;
     @Prop() private backColor : String | undefined;
@@ -17,9 +16,7 @@ export default class InputDate extends Vue {
     @Prop() private height : String | undefined;
     @Prop() private radius : String | undefined;
     @Prop() private label : String | undefined;
-    @Prop() private restrictions : Array<Function> | undefined
 
-    private errors : Array<Restriction> = new Array<Restriction>();
     private util : DateUtil = new DateUtil();
     private focus : Boolean = false;
     @Prop({default: ''}) private value : String | undefined;
@@ -33,15 +30,6 @@ export default class InputDate extends Vue {
                 this.currentValue = this.util.dateFormat(date, DateUtil.WEB_FORMAT)
             }
         }
-        if(this.restrictions?.length){
-            this.errors = new Array<Restriction>();
-            this.restrictions?.forEach(func => {
-                const rest : Restriction = func.call(this.currentValue,this.currentValue);
-                if(!rest.valid){
-                    this.errors.push(rest);
-                }
-            })
-        }
     }
 
     mounted(){
@@ -49,13 +37,7 @@ export default class InputDate extends Vue {
     }
 
     public change(){
-        this.errors = new Array<Restriction>();
-        this.restrictions?.forEach(func => {
-            const rest : Restriction = func.call(this.currentValue,this.currentValue);
-            if(!rest.valid){
-                this.errors.push(rest);
-            }
-        })
+        super.check()
         if(this.currentValue) {
             const date = this.util.dateParse(this.currentValue.toString(),DateUtil.WEB_FORMAT);
             if(date) {
@@ -65,5 +47,11 @@ export default class InputDate extends Vue {
         }
 
     }
+
+    getValue(): any {
+        return this.currentValue
+    }
+
+
 
 }

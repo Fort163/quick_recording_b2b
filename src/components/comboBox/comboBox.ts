@@ -2,15 +2,16 @@ import Vue from 'vue'
 import Component from "vue-class-component";
 import Button from "@/components/button/Button.vue";
 import {Inject, Prop, Watch} from "vue-property-decorator";
-import {Combo, ComboItem, Restriction} from "@/store/model";
 import {ApiB2B} from "@/api/api";
+import {CheckComponent} from "@/store/component";
+import {Combo} from "@/models/component";
 
 @Component({
     components: {
         Button
     }
 })
-export default class ComboBox extends Vue {
+export default class ComboBox extends CheckComponent {
 
     /*
         Не реализован
@@ -42,10 +43,6 @@ export default class ComboBox extends Vue {
      */
     @Prop() private disabled: boolean | undefined;
     /*
-        Ограничения срабатывают при выборе значения
-     */
-    @Prop() private restrictions: Array<Function> | undefined
-    /*
         Массив статических эелементов
      */
     @Prop() private values: Array<Object> | undefined;
@@ -57,7 +54,9 @@ export default class ComboBox extends Vue {
         Включение поисковой строки
      */
     @Prop() private searchOn: boolean | undefined;
+
     @Inject('api') api: ApiB2B | undefined;
+
     @Watch('request')
     private onPropertyChanged(value: RequestCombo | undefined, oldValue: RequestCombo | undefined) {
         if (value) {
@@ -93,7 +92,6 @@ export default class ComboBox extends Vue {
     private search: string = '';
     private currentValue: Object | Array<Object> | null = null;
     private store: Array<Object> = new Array<Object>();
-    private errors: Array<Restriction> = new Array<Restriction>();
 
     created() {
         if (this.value) {
@@ -111,15 +109,6 @@ export default class ComboBox extends Vue {
         }
         if (this.request) {
             this.sendRequest(this.request)
-        }
-        if(this.restrictions?.length){
-            this.errors = new Array<Restriction>()
-            this.restrictions?.forEach(func => {
-                const rest: Restriction = func.call(this.currentValue, this.currentValue);
-                if (!rest.valid) {
-                    this.errors.push(rest);
-                }
-            })
         }
     }
 
@@ -213,13 +202,7 @@ export default class ComboBox extends Vue {
 
     private submit() {
         setTimeout(() => {
-            this.errors = new Array<Restriction>()
-            this.restrictions?.forEach(func => {
-                const rest: Restriction = func.call(this.currentValue, this.currentValue);
-                if (!rest.valid) {
-                    this.errors.push(rest);
-                }
-            })
+            super.check();
             this.$emit('input', this.currentValue);
         }, 50)
     }
@@ -332,6 +315,12 @@ export default class ComboBox extends Vue {
         }
         return <T>result;
     }
+
+    getValue(): any {
+        return this.currentValue;
+    }
+
+
 
 }
 

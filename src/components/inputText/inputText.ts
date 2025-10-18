@@ -1,12 +1,12 @@
-import Vue from 'vue'
 import Component from "vue-class-component";
 import {Prop} from "vue-property-decorator";
-import {Restriction} from "@/store/model";
+import {CheckComponent} from "@/store/component";
+
 @Component({
     components: {
     }
 })
-export default class InputText extends Vue {
+export default class InputText extends CheckComponent {
 
     @Prop() private color : String | undefined;
     @Prop() private backColor : String | undefined;
@@ -16,9 +16,7 @@ export default class InputText extends Vue {
     @Prop() private height : String | undefined;
     @Prop() private radius : String | undefined;
     @Prop() private label : String | undefined;
-    @Prop() private restrictions : Array<Function> | undefined
 
-    private errors : Array<Restriction> = new Array<Restriction>();
     private focus : Boolean = false;
     @Prop({default: ''}) private value : String | undefined;
 
@@ -28,31 +26,18 @@ export default class InputText extends Vue {
         if(this.value) {
             this.currentValue = this.value
         }
-        if(this.restrictions?.length){
-            this.errors = new Array<Restriction>();
-            this.restrictions?.forEach(func => {
-                const rest : Restriction = func.call(this.currentValue,this.currentValue);
-                if(!rest.valid){
-                    this.errors.push(rest);
-                }
-            })
-        }
-    }
-
-    mounted(){
-        //this.currentValue = this.value
     }
 
     public change(){
-        this.errors = new Array<Restriction>();
-        this.restrictions?.forEach(func => {
-            const rest : Restriction = func.call(this.currentValue,this.currentValue);
-            if(!rest.valid){
-                this.errors.push(rest);
-            }
-        })
+        super.check()
         this.$emit('input', this.currentValue)
         this.$emit('keyup', this.currentValue)
     }
+
+    getValue(): any {
+        return this.currentValue;
+    }
+
+
 
 }
