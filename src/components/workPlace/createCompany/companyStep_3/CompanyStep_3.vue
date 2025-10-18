@@ -1,10 +1,8 @@
 <template>
-  <div :class="'company-step'" :key="'CompanyStep_2'">
+  <div :class="'company-step'" :key="'CompanyStep_3'">
     <h2 style="margin: auto">{{ this.$t('label.createCompany.companyStep_3.title') }}</h2>
     <div :class="'v-layout'">
-      <template v-for="(item,index) in company.schedules">
-        <InputSchedule :key="index" v-model="company.schedules[index]" :restrictions="[restriction.checkSchedule()]" style="width: 100%;margin-top: 5px"/>
-      </template>
+      <ScheduleComponent v-model="company.schedules" :needRepeat="true" />
     </div>
     <div :class="'h-layout'" style="flex-direction: row-reverse">
       <Button  :errors="this.pageError" :height="50" :width="200" :radius="15" :color="'#a4fdc0'" style="margin-left: auto;margin-top: 10px"

@@ -1,14 +1,16 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {Company, DayOfWeek, Errors, NewSchedule, Restriction, Schedule} from "@/store/model";
 import Button from "@/components/button/Button.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
-import InputSchedule from "@/components/inputSchedule/InputSchedule.vue";
+import ScheduleComponent from "@/components/scheduleComponent/ScheduleComponent.vue";
+import {Company, NewSchedule} from "@/models/company-service";
+import {DayOfWeek} from "@/models/main";
+import {Errors} from "@/models/error";
 
 @Component({
     components: {
         Button,
-        InputSchedule
+        ScheduleComponent
     }
 
 })
@@ -30,9 +32,9 @@ export default class CompanyStep_3 extends Vue {
 
     public submit(){
         this.pageError = new Array<string>();
-        const error : Errors = this.restriction.checkError()
+        const error : Errors = this.restriction.checkError(this)
         if(error.hasError){
-            error.errors.forEach(item => {
+            error.messages.forEach(item => {
                 this.pageError.push(item)
             })
         }
