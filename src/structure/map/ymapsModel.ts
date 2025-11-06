@@ -1,17 +1,18 @@
 import {Base, Smart} from "@/models/main";
 
 export class GeocoderDefault implements Geocoder {
-    uuid: string | null
-    geoObjects: Array<GeocoderObject>
-    longitude: number
-    latitude: number
-    metaData: MetaData
-    name: string
-    isActive: boolean
+    uuid: string | null;
     createdBy: string | undefined;
     createdWhen: string | undefined;
     updatedBy: string | undefined;
     updatedWhen: string | undefined;
+    isActive: boolean;
+    name: string;
+    longitude: number;
+    latitude: number;
+    metaData: MetaData;
+    geoObjects: Array<GeocoderObject>;
+    company: Base | null;
 
     constructor(response: any, coords: [number, number]) {
         this.uuid = null;
@@ -21,11 +22,13 @@ export class GeocoderDefault implements Geocoder {
         this.latitude = <number>coords.pop();
         this.metaData = response.metaData;
         this.name = new String(response.geoObjects.get(0).properties._data.text).toString();
+        this.company = null;
     }
 }
 
 export interface Geocoder extends Smart {
     geoObjects: Array<GeocoderObject>
+    company: Base | null
     longitude: number
     latitude: number
     metaData: MetaData
