@@ -1,14 +1,21 @@
-import {Base} from "@/models/main";
+import {Base, Smart} from "@/models/main";
 
-export class GeocoderResultDefault implements GeocoderResult{
-    uuid : string | null
-    geoObjects:Array<GeocoderObject>
-    longitude : number
-    latitude : number
-    metaData:MetaData
-    name:string
-    constructor(response : any,coords : [number,number]) {
+export class GeocoderDefault implements Geocoder {
+    uuid: string | null
+    geoObjects: Array<GeocoderObject>
+    longitude: number
+    latitude: number
+    metaData: MetaData
+    name: string
+    isActive: boolean
+    createdBy: string | undefined;
+    createdWhen: string | undefined;
+    updatedBy: string | undefined;
+    updatedWhen: string | undefined;
+
+    constructor(response: any, coords: [number, number]) {
         this.uuid = null;
+        this.isActive = true;
         this.geoObjects = <Array<GeocoderObject>>response.geoObjects.get(0).properties._data.metaDataProperty.GeocoderMetaData.Address.Components;
         this.longitude = <number>coords.pop();
         this.latitude = <number>coords.pop();
@@ -17,27 +24,27 @@ export class GeocoderResultDefault implements GeocoderResult{
     }
 }
 
-export interface GeocoderResult extends Base{
-    geoObjects:Array<GeocoderObject>
-    longitude : number
-    latitude : number
-    metaData:MetaData
-    name:string
+export interface Geocoder extends Smart {
+    geoObjects: Array<GeocoderObject>
+    longitude: number
+    latitude: number
+    metaData: MetaData
+    name: string
 }
 
-export interface GeocoderObject extends Base{
-    kind : string;
-    name : string;
+export interface GeocoderObject extends Base {
+    kind: string;
+    name: string;
 }
 
-export interface MetaData{
-    geocoder : Geocoder
+export interface MetaData {
+    geocoder: GeocoderRequest
 }
 
-export interface Geocoder{
-    request :string,
-    found : number,
-    results : number,
-    skip : number,
-    suggest : any
+export interface GeocoderRequest {
+    request: string,
+    found: number,
+    results: number,
+    skip: number,
+    suggest: any
 }
