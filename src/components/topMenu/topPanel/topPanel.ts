@@ -2,6 +2,8 @@ import Component from "vue-class-component";
 import Vue from "vue";
 import {AuthProvider} from "@/auth/AuthProvider";
 import LocalePicker from "@/components/topMenu/localePicker/LocalePicker.vue";
+import {UserInfo} from "@/models/user-service";
+import {User} from "@/models/auth-service";
 
 @Component({
     components: {
@@ -11,7 +13,6 @@ import LocalePicker from "@/components/topMenu/localePicker/LocalePicker.vue";
 export default class TopPanel extends Vue {
 
     private show : boolean = false;
-    private userInfo = AuthProvider.init().userInfo;
     $router: any;
 
     public logout(){
@@ -23,4 +24,7 @@ export default class TopPanel extends Vue {
         this.show = false;
     }
 
+    get user(): User | undefined {
+        return this.$store.getters.userInfo?.user;
+    }
 }

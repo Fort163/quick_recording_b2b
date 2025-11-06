@@ -1,12 +1,13 @@
 import axios, {AxiosResponse} from "axios";
-import {Authorization, AuthToken, UserInfo} from "@/models/authorization";
+import {AuthService, AuthToken} from "@/models/auth-service";
+import {Base} from "@/models/main";
 
 export class AuthProvider{
 
     private baseUrl : string = process.env.VUE_APP_BASE_URL_SSO;
     private token : AuthToken | null = null;
-    private _userInfo : UserInfo | null = null;
-    private authorization : Authorization | null = null
+    private _userInfo : Base | null = null;
+    private authorization : AuthService | null = null
     private code : string | null = null;
     private static provider : AuthProvider;
 
@@ -45,11 +46,11 @@ export class AuthProvider{
         return this.token;
     }
 
-    get userInfo() : UserInfo | null {
+    get userInfo() : Base | null {
         return this._userInfo;
     }
 
-    set userInfo(value: UserInfo | null) {
+    set userInfo(value: Base | null) {
         this._userInfo = value;
     }
 
@@ -134,28 +135,28 @@ export class AuthProvider{
         );
     }
 
-    private createInfo(token : AuthToken) : Promise<AxiosResponse<UserInfo>> {
+    private createInfo(token : AuthToken) : Promise<AxiosResponse<Base>> {
         const payload = new FormData();
         payload.append('token', token.access_token)
         const uninterceptedAxiosInstance  = axios.create()
-        return uninterceptedAxiosInstance.post<UserInfo>(this.baseUrl + process.env.VUE_APP_OAUTH_INFO, payload, {
+        return uninterceptedAxiosInstance.post<Base>(this.baseUrl + process.env.VUE_APP_OAUTH_INFO, payload, {
             headers: {
                 'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
             }
         })
     }
 
-    public getAuthorization() : Promise<Authorization> {
-        return new Promise<Authorization>((resolve,reject) => {
+    public getAuthorization() : Promise<AuthService> {
+        return new Promise<AuthService>((resolve, reject) => {
             if(!this.authorization) {
                 this.createCode().then(code =>{
                     this.createToken(code)?.then(response => {
                         this.token = response.data
                         this.createInfo(response.data).then(infoData => {
                             this._userInfo = infoData.data
-                            this.authorization = new class implements Authorization {
+                            this.authorization = new class implements AuthService {
                                 token: AuthToken = response.data;
-                                user: UserInfo = infoData.data;
+                                user: Base = infoData.data;
                             }
                             resolve(this.authorization);
                         })

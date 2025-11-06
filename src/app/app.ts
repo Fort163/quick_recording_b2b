@@ -14,6 +14,9 @@ import {convertCookieLocale} from "@/store/util/LocaleUtil";
 import {ApiWS} from "@/api/apiWS";
 import {NotificationMessage} from "@/models/notification-service";
 import {LocaleItem} from "@/models/main";
+import {userApi} from "@/api/apiUtil";
+import {UserInfo} from "@/models/user-service";
+import {AuthProvider} from "@/auth/AuthProvider";
 
 Vue.use(Vuex);
 Vue.use(VueCookies);
@@ -64,6 +67,9 @@ export default class App extends Vue {
             this.$store.commit('setCoordsUser',pos.coords);
         }, err => {
             console.error("Position user not set");
+        })
+        this.api.getApi<UserInfo>(userApi("/user/"+AuthProvider.init().userInfo?.uuid)).then(value => {
+            this.$store.commit("setUserInfo", value);
         })
     }
 

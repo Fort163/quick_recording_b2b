@@ -1,11 +1,12 @@
 import {MaskModel} from "@/models/modal";
 import {Company} from "@/models/company-service";
 import {NotificationMessage} from "@/models/notification-service";
+import {UserInfo} from "@/models/user-service";
 
 export interface State{
     currentPath : string
     createCompany : Company | null
-    myCompany : Company | null
+    userInfo : UserInfo | null
     mapInfo : MapInfo
     mask : MaskModel
     locale : LocaleItem

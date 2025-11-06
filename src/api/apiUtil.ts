@@ -1,3 +1,7 @@
+export function userApi(uri:string, version?: ApiVersion):string{
+    return createUri(process.env.VUE_APP_USER_API, uri, version);
+}
+
 export function authApi(uri:string, version?: ApiVersion):string{
     return createUri(process.env.VUE_APP_AUTH_API, uri, version);
 }

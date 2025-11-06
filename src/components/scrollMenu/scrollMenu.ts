@@ -1,7 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import {AuthProvider} from "@/auth/AuthProvider";
-import {Authority} from "@/models/authorization";
+import {Authority} from "@/models/auth-service";
 
 @Component({
     components: {
@@ -10,7 +10,7 @@ import {Authority} from "@/models/authorization";
 export default class ScrollMenu extends Vue {
 
     private side : boolean = true
-    private authority : Array<Authority> | undefined = AuthProvider.init().userInfo?.authorities
+    private authority : Array<Authority> | undefined = undefined;//AuthProvider.init().userInfo?.authorities
 
 
     public hasCompany() : boolean{

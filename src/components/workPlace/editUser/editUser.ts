@@ -10,12 +10,12 @@ import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {DateUtil} from "@/store/util/DateUtil";
 import ComboBox from "@/components/comboBox/ComboBox.vue";
 import {authApi, notificationApi, qrB2BApi} from "@/api/apiUtil";
-import {UserInfoChange} from "@/models/user-service";
 import {Combo, ComboItem} from "@/models/component";
-import {UserInfo} from "@/models/authorization";
+import {User, UserChange} from "@/models/auth-service";
 import {MailCodeClass, MailResult} from "@/models/notification-service";
-import {Result, TemplateEnum} from "@/models/main";
+import {Base, Result, TemplateEnum} from "@/models/main";
 import {Errors} from "@/models/error";
+import {UserInfo} from "@/models/user-service";
 
 @Component({
     components: {
@@ -29,7 +29,7 @@ import {Errors} from "@/models/error";
 export default class EditUser extends Vue {
 
     @Inject('api') api: ApiB2B | undefined;
-    private info : UserInfoChange | null = null
+    private info : UserChange | null = null
     private genderCombo : ComboItem | null = null
     private emailCode : string | null  = null
     private emailCodeSend : Boolean  = false
@@ -47,9 +47,9 @@ export default class EditUser extends Vue {
 
 
     mounted() {
-        const userInfo : UserInfo | null = AuthProvider.init().userInfo;
+        const userInfo : UserInfo | null = this.$store.getters.userInfo;
         if(userInfo){
-            this.info = new UserInfoChange(userInfo);
+            this.info = new UserChange(userInfo.user);
             this.genderCombo = this.getGender(this.info.gender);
             this.emailVerified = !!this.info.email;
             this.phoneVerified = !!this.info.phoneNumber;
@@ -170,7 +170,7 @@ export default class EditUser extends Vue {
             if(this.genderCombo && this.info) {
                 this.info.gender = this.genderCombo.key
             }
-            this.api?.putApi<UserInfo>(authApi('/user/patch'),this.info).then(response => {
+            this.api?.putApi<User>(authApi('/user/patch'),this.info).then(response => {
                 console.log(response)
                 AuthProvider.init().userInfo = response
                 this.$router.push('/')

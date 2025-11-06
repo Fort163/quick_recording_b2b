@@ -1,13 +1,13 @@
 <template>
-  <div class="topPanel">
+  <div v-if="this.user != null" class="topPanel">
     <div style="width: 75%">
       <img :class="'logo'" src="../../../../public/logo.svg">
     </div>
-    <div v-if="this.userInfo.userpic != null" :class="'user-info'" :title="this.userInfo.fullName" @click="show = !show">
-      <img :class="'userpic'" :src="this.userInfo.userpic" >
+    <div v-if="this.user.userpic != null" :class="'user-info'" :title="this.user.fullName" @click="show = !show">
+      <img :class="'userpic'" :src="this.user.userpic" >
     </div>
     <div v-else :class="'user-info'" @click="show = !show">
-      {{ this.userInfo.fullName }}
+      {{ this.user.fullName }}
     </div>
     <transition-group :class="'user-info-bar-window'" name="user-info-bar" tag="div" >
       <div :key="'bar'" :class="'user-info-bar'" v-if="this.show" @mouseleave="show=false">
