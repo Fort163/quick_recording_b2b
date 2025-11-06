@@ -4,7 +4,7 @@ import Button from "@/components/button/Button.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 // @ts-ignore
 import {loadYmap, yandexMap, ymapMarker} from 'vue-yandex-maps'
-import {GeocoderResultDefault} from "@/structure/map/ymapsModel";
+import {GeocoderDefault} from "@/structure/map/ymapsModel";
 import {Company} from "@/models/company-service";
 import {MapSettings} from "@/models/main";
 
@@ -63,7 +63,7 @@ export default class CompanyStep_2 extends Vue {
     public onClick(event: any) {
         ymaps.geocode(event.get('coords')).then(
             (res : any) => {
-                this.company.geoPosition = new GeocoderResultDefault(res,event.get('coords'));
+                this.company.geoPosition = new GeocoderDefault(res,event.get('coords'));
             },
             (err : any) => {
                 alert(err);

@@ -21,7 +21,7 @@ export default class CompanyStep_3 extends Vue {
     private pageError : Array<string> = new Array<string>()
 
     created(){
-        if(this.company.schedules.length === 0){
+        if(this.company.schedules?.length === 0){
             for (const item in DayOfWeek) {
                 if(!(Number(item) >= 0)){
                     this.company.schedules.push(new NewSchedule(item));
@@ -38,7 +38,7 @@ export default class CompanyStep_3 extends Vue {
                 this.pageError.push(item)
             })
         }
-        if(!this.company.schedules.find(item => item.work)){
+        if(!this.company.schedules?.find(item => item.work)){
             this.pageError.push(this.$t('label.createCompany.companyStep_3.restriction.haveWorkDay').toString())
         }
         if(this.pageError.length === 0){
