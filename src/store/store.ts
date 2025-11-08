@@ -4,7 +4,7 @@ import {AuthProvider} from "@/auth/AuthProvider";
 import {convertI18nLocale} from "@/store/util/LocaleUtil";
 import i18n from "@/locales/i18n";
 import {qrB2BApi} from "@/api/apiUtil";
-import {LocaleItem, MapInfo, State} from "@/models/main";
+import {CreateCompany, LocaleItem, MapInfo, State} from "@/models/main";
 import {ErrorWindow, LoadMask, MaskModel, ModalWindow} from "@/models/modal";
 import {Company} from "@/models/company-service";
 import {NotificationMessage} from "@/models/notification-service";
@@ -33,7 +33,7 @@ function defaultLocale(): LocaleItem {
 class AppState implements State {
     mapInfo: MapInfo;
     mask: MaskModel;
-    createCompany: Company | null
+    createCompany: CreateCompany
     userInfo: UserInfo | null
     currentPath: string
     locale: LocaleItem
@@ -41,7 +41,10 @@ class AppState implements State {
 
     constructor() {
         this.currentPath = 'home'
-        this.createCompany = null
+        this.createCompany = new class implements CreateCompany {
+            company : Company | null = null;
+            created : boolean = false;
+        }
         this.userInfo = null
         this.mask = new class implements MaskModel {
             errorWindow: ErrorWindow | null = null;
@@ -108,8 +111,12 @@ function createStore(state: State): Store<State> {
                 console.log("Set path " + value)
             },
             setCreateCompany(state: State, value: Company) {
-                state.createCompany = value;
+                state.createCompany.company = value;
                 console.log("Set company")
+            },
+            setCreateCompanyCreated(state: State, value: boolean) {
+                state.createCompany.created = value;
+                console.log("Set created company")
             },
             setUserInfo(state: State, value: UserInfo) {
                 state.userInfo = value;
@@ -139,6 +146,10 @@ function createStore(state: State): Store<State> {
             setNotification(state: State, value: NotificationMessage) {
                 state.notifications.push(value)
                 console.log("Set notification")
+            },
+            removeNotification(state: State, value: NotificationMessage) {
+                state.notifications.splice(state.notifications.findIndex(item => item.uuid === value.uuid),1);
+                console.log("Delete notification")
             }
         },
         getters: {
@@ -146,7 +157,10 @@ function createStore(state: State): Store<State> {
                 return state.currentPath
             },
             createCompany(state) {
-                return state.createCompany
+                return state.createCompany.company
+            },
+            createCompanyCreated(state) {
+                return state.createCompany.created
             },
             userInfo(state) {
                 return state.userInfo
