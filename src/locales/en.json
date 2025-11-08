@@ -194,7 +194,9 @@
       "action":"Actions"
     },
     "message": {
-      "youAdded" : "You have been added to the company"
+      "role-updated" : "Role updated",
+      "you-added" : "You have been added to the company",
+      "you-create-company" : "You have created your own company"
     }
   }
 }
