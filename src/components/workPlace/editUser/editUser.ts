@@ -1,7 +1,6 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import {Inject} from "vue-property-decorator";
-import {AuthProvider} from "@/auth/AuthProvider";
 import InputText from "@/components/inputText/InputText.vue";
 import Button from "@/components/button/Button.vue";
 import {ApiB2B} from "@/api/api";
@@ -171,12 +170,12 @@ export default class EditUser extends Vue {
                 this.info.gender = this.genderCombo.key
             }
             this.api?.putApi<User>(authApi('/user/patch'),this.info).then(response => {
-                console.log(response)
-                AuthProvider.init().userInfo = response
+                const userInfo : UserInfo = this.$store.getters.userInfo;
+                userInfo.user = response
+                this.$store.commit("setUserInfo", userInfo);
                 this.$router.push('/')
             }).catch(error => {
                 console.log(error)
-                console.log("Normal catch")
             });
         }
     }
