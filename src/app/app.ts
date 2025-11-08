@@ -13,8 +13,8 @@ import NotificationMenu from "@/components/notificationMenu/NotificationMenu.vue
 import {convertCookieLocale} from "@/store/util/LocaleUtil";
 import {ApiWS} from "@/api/apiWS";
 import {NotificationMessage} from "@/models/notification-service";
-import {LocaleItem} from "@/models/main";
-import {userApi} from "@/api/apiUtil";
+import {LocaleItem, Page} from "@/models/main";
+import {notificationApi, userApi} from "@/api/apiUtil";
 import {UserInfo} from "@/models/user-service";
 import {AuthProvider} from "@/auth/AuthProvider";
 
@@ -70,6 +70,13 @@ export default class App extends Vue {
         })
         this.api.getApi<UserInfo>(userApi("/user/"+AuthProvider.init().userInfo?.uuid)).then(value => {
             this.$store.commit("setUserInfo", value);
+            const requestParams = new URLSearchParams();
+            requestParams.append("received", "false");
+            requestParams.append("toUser", value.user.username);
+            requestParams.append("size", "100");
+            this.api.getApi<Page<NotificationMessage>>(notificationApi("/notification/message"), requestParams).then(value => {
+                value.content.forEach(item => this.$store.commit("setNotification",item));
+            });
         })
     }
 
