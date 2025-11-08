@@ -22,7 +22,7 @@
       </ul>
     </div>
 
-    <div :class="'h-layout'" style="flex-direction: row-reverse">
+    <div v-if="!this.$store.getters.createCompanyCreated" :class="'h-layout'" style="flex-direction: row-reverse">
       <Button :errors="this.pageError" :height="50" :width="200" :radius="15" :color="'#a4fdc0'"
               style="margin-left: auto;margin-top: 10px"
               :text="this.$t('label.createCompany.companyStep_4.button.create')" @click="submit()"/>
