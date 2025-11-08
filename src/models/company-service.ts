@@ -48,8 +48,8 @@ export interface Activity extends Smart {
 
 export interface Profession extends Smart {
     name: string;
-    description: string | null;
-    company: Base | null;
+    description: string;
+    company: Base;
     services: Array<Base> | null;
 }
 
@@ -57,21 +57,95 @@ export interface Service extends Smart {
     name: string;
     workClock: string;
     countPartTime: Number | null;
-    company: Base | null;
+    company: Base;
     employee: Base | null;
 }
 
 export interface Employee extends Smart {
     authId: string;
-    profession: Profession | null;
-    company: Base | null;
-    permissions: Array<CompanyHierarchy> | null;
+    profession: Profession;
+    company: Base;
+    permissions: Array<CompanyHierarchy>;
     services: Array<Base> | null;
 }
 
 export enum CompanyHierarchy {
-    owner,
-    manager,
-    worker,
-    assistant
+    owner = "OWNER",
+    manager = "MANAGER",
+    worker = "WORKER",
+    assistant = "ASSISTANT"
+}
+
+export class SimpleService implements Service{
+    company: Base;
+    countPartTime: Number | null = null;
+    createdBy: string | undefined;
+    createdWhen: string | undefined;
+    employee: Base | null;
+    isActive: boolean;
+    name: string;
+    updatedBy: string | undefined;
+    updatedWhen: string | undefined;
+    uuid: string | null;
+    workClock: string;
+
+
+    constructor(company: Base, name: string, workClock: string,
+                isActive: boolean = true, employee: Base | null = null, uuid: string | null = null) {
+        this.company = company;
+        this.employee = employee;
+        this.isActive = isActive;
+        this.name = name;
+        this.uuid = uuid;
+        this.workClock = workClock;
+    }
+}
+
+export class SimpleProfession implements Profession{
+    name: string;
+    description: string;
+    isActive: boolean;
+    company: Base;
+    services: Array<Base> | null;
+    uuid: string | null;
+    createdBy: string | undefined;
+    createdWhen: string | undefined;
+    updatedBy: string | undefined;
+    updatedWhen: string | undefined;
+
+
+    constructor(name: string, description: string, company: Base, isActive: boolean = true,
+                services: Array<Base> | null = null, uuid: string | null = null) {
+        this.name = name;
+        this.description = description;
+        this.isActive = isActive;
+        this.company = company;
+        this.services = services;
+        this.uuid = uuid;
+    }
+}
+
+export class SimpleEmployee implements Employee{
+    authId: string;
+    company: Base;
+    isActive: boolean;
+    permissions: Array<CompanyHierarchy>;
+    profession: Profession;
+    services: Array<Base> | null;
+    uuid: string | null;
+    createdBy: string | undefined;
+    createdWhen: string | undefined;
+    updatedBy: string | undefined;
+    updatedWhen: string | undefined;
+
+    constructor(authId: string, company: Base, profession: Profession, permissions: Array<CompanyHierarchy>,
+                services: Array<Base> | null = null, isActive: boolean = true, uuid: string | null = null) {
+        this.authId = authId;
+        this.company = company;
+        this.isActive = isActive;
+        this.permissions = permissions;
+        this.profession = profession;
+        this.services = services;
+        this.uuid = uuid;
+    }
 }

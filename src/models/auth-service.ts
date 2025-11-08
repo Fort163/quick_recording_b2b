@@ -19,6 +19,7 @@ export interface User extends Smart{
     lastName: string;
     userpic : string;
     email: string;
+    username: string;
     gender: string;
     phoneNumber: string;
     birthDay: string;

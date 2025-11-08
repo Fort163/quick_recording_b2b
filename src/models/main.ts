@@ -5,12 +5,17 @@ import {UserInfo} from "@/models/user-service";
 
 export interface State{
     currentPath : string
-    createCompany : Company | null
+    createCompany : CreateCompany
     userInfo : UserInfo | null
     mapInfo : MapInfo
     mask : MaskModel
     locale : LocaleItem
     notifications: Array<NotificationMessage>
+}
+
+export interface CreateCompany{
+    company : Company | null;
+    created : boolean;
 }
 
 export interface Base{
@@ -40,6 +45,18 @@ export interface MapSettings{
     version: string
 }
 
+export interface PageInfo {
+    size: Number
+    number: Number
+    totalElements: Number
+    totalPages: Number
+}
+
+export interface Page<T extends Base>{
+    content: Array<T>
+    page: PageInfo
+}
+
 export enum TemplateEnum{
     REGISTRATION = "REGISTRATION",
     QR_B2B_CODE = "QR_B2B_CODE",
@@ -59,6 +76,14 @@ export enum DayOfWeek{
     friday,
     saturday,
     sunday
+}
+
+export class SimpleBase implements Base{
+    uuid: string | null;
+
+    constructor(uuid: string) {
+        this.uuid = uuid;
+    }
 }
 
 export class LocaleItem {

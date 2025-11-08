@@ -6,6 +6,6 @@ export interface UserInfo {
     companyId: string | null;
     employeeId: string | null;
     user: User;
-    company: Company;
-    employee: Employee;
+    company: Company | null;
+    employee: Employee | null;
 }
