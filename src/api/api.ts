@@ -118,6 +118,26 @@ export class ApiB2B implements Api{
             })
     }
 
+    deleteApi<T>(uri: string, param?: URLSearchParams, maskOff?: boolean): Promise<T> {
+        this.loadMask(!maskOff);
+        let url = this._URL + uri;
+        if(param){
+            url = url.concat('?' + param)
+        }
+        return axios.delete(url)
+            .then((response: any) => {
+                    this.loadMask(false);
+                    return response.data;
+                }
+            )
+            .catch((error) => {
+                this.loadMask(false);
+                const response = error.response;
+                const apiError : ApiError = <ApiError>response.data;
+                this.handleError(apiError, response.status)
+            })
+    }
+
     public init(){
         axios.interceptors.request.use(function (config) {
             const provider = AuthProvider.init()
