@@ -44,6 +44,8 @@ export default class NotificationMenu extends Vue {
                 case MessageType.LOGOUT: {
                     this.api?.deleteApi<Boolean>(qrB2BApi('/session')).then(response => {
                         AuthProvider.init().logout();
+                    }).catch(reason => {
+                        AuthProvider.init().logout();
                     });
                     break;
                 }

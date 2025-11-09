@@ -3,12 +3,8 @@ import Vue from "vue";
 import {Inject} from "vue-property-decorator";
 import Button from "@/components/button/Button.vue";
 import {ApiB2B} from "@/api/api";
-import {notificationApi, qrB2BApi, userApi} from "@/api/apiUtil";
+import {qrB2BApi} from "@/api/apiUtil";
 import {Company, Schedule} from "@/models/company-service";
-import {UserInfo} from "@/models/user-service";
-import {AuthProvider} from "@/auth/AuthProvider";
-import {Page} from "@/models/main";
-import {NotificationMessage} from "@/models/notification-service";
 
 @Component({
     components: {
