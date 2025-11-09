@@ -3,8 +3,8 @@ import axios from "axios";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {convertI18nLocale} from "@/store/util/LocaleUtil";
 import i18n from "@/locales/i18n";
-import {qrB2BApi} from "@/api/apiUtil";
-import {CreateCompany, LocaleItem, MapInfo, State} from "@/models/main";
+import {notificationApi, qrB2BApi, userApi} from "@/api/apiUtil";
+import {CreateCompany, LocaleItem, MapInfo, Page, State} from "@/models/main";
 import {ErrorWindow, LoadMask, MaskModel, ModalWindow} from "@/models/modal";
 import {Company} from "@/models/company-service";
 import {NotificationMessage} from "@/models/notification-service";
@@ -59,16 +59,7 @@ class AppState implements State {
 
 function getState(): Promise<State> {
     return new Promise<State>(((resolve, reject) => {
-            const uninterceptedAxiosInstance = axios.create()
-            const provider = AuthProvider.init()
-            const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
-            uninterceptedAxiosInstance.get<State>(
-                process.env.VUE_APP_BASE_URL_GATEWAY + qrB2BApi("/session"), {
-                    headers: {
-                        'Authorization': token
-                    }
-                }
-            ).then(response => {
+            axios.get<State>(qrB2BApi("/session")).then(response => {
                 if (response.data) {
                     resolve(response.data);
                 } else {
@@ -86,23 +77,12 @@ function createStore(state: State): Store<State> {
         state: state,
         actions: {
             setCurrentPath(context, value: string) {
-                const uninterceptedAxiosInstance = axios.create()
-                const provider = AuthProvider.init()
-                const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
                 context.commit('setCurrentPath', value);
                 const sendState = Object.assign(new AppState(), context.state);
                 sendState.notifications = [];
-                uninterceptedAxiosInstance.post<String>(
-                    process.env.VUE_APP_BASE_URL_GATEWAY + qrB2BApi("/session"),
-                    sendState, {
-                        headers: {
-                            'Authorization': token
-                        }
-                    }).then(response => {
-
-                }).catch(reason => {
-
-                })
+                axios.post<void>(qrB2BApi("/session"), sendState)
+                    .then(response => {})
+                    .catch(reason => {})
             }
         },
         mutations: {
@@ -182,13 +162,47 @@ function createStore(state: State): Store<State> {
     return storeApp;
 }
 
+export function initAxios(): Promise<Boolean> {
+    return new Promise<Boolean>((resolve, reject) => {
+        try {
+            axios.interceptors.request.use(function (config) {
+                const provider = AuthProvider.init()
+                const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
+                config.headers.Authorization =  token;
+                config.withCredentials = true
+                return config;
+            })
+            resolve(true);
+        }
+        catch (exception){
+            resolve(false);
+        }
+    });
+}
+
+export function updateState(state : State) : Promise<State> {
+    return new Promise<State>(resolve => {
+        axios.get<UserInfo>(userApi("/user/"+AuthProvider.init().userInfo?.uuid)).then(response => {
+            const userInfo : UserInfo = response.data;
+            state.userInfo = userInfo;
+            resolve(state);
+        }).catch(reason => {
+            throw new Error("Error get userInfo!")
+        })
+    })
+}
+
 export function initStore(): Promise<Store<State>> {
-    return new Promise<Store<State>>(((resolve, reject) => {
+    return new Promise<Store<State>>((resolve, reject) => {
         getState().then(state => {
-            resolve(createStore(state))
+            updateState(state).then(updatedState =>
+                resolve(createStore(updatedState))
+            ).catch(reason => {
+                throw new Error("State not updated");
+            })
         }).catch(reason => {
             console.error("Error not create store!")
             console.error(reason)
         })
-    }))
+    })
 }

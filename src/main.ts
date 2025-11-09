@@ -4,9 +4,10 @@ import VueRouter from "vue-router";
 import Home from "@/components/workPlace/home/Home.vue";
 import EditUser from "@/components/workPlace/editUser/EditUser.vue";
 import {AuthProvider} from "@/auth/AuthProvider";
-import {initStore} from "@/store/store";
+import {initAxios, initStore} from "@/store/store";
 import CreateCompany from "@/components/workPlace/createCompany/СreateCompany.vue";
 import i18n from "@/locales/i18n";
+import JoinCompany from "@/components/workPlace/joinCompany/JoinCompany.vue";
 
 Vue.use(VueRouter);
 
@@ -50,7 +51,17 @@ const routes = [
   {
     path: "/joinCompany",
     name: 'joinCompany',
-    component: Home,
+    component: JoinCompany,
+  },
+  {
+    path: "/join_step_1",
+    name: 'join_step_1',
+    component: JoinCompany,
+  },
+  {
+    path: "/join_step_2",
+    name: 'join_step_2',
+    component: JoinCompany,
   },
   {
     path: "/myCompany",
@@ -127,40 +138,43 @@ Vue.use({
   }
 });
 
-
-
 AuthProvider.init().getAuthorization().then(auth =>{
-  initStore().then(
-      store => {
-        router.beforeEach((to, from, next) => {
-          if (to.path === '/login' && to.query.code != null) {
-            if(store.getters.currentPath){
-              next({name: store.getters.currentPath})
+  initAxios().then(isInit => {
+    if(!isInit){
+      throw new Error("Axios not init!")
+    }
+    initStore().then(
+        store => {
+          router.beforeEach((to, from, next) => {
+            if (to.path === '/login' && to.query.code != null) {
+              if(store.getters.currentPath){
+                next({name: store.getters.currentPath})
+              }
+              else {
+                next({name: 'home'});
+              }
+            } else {
+              if(to.name && from.name){
+                store.dispatch("setCurrentPath",to.name)
+              }
+              next()
             }
-            else {
-              next({name: 'home'});
-            }
-          } else {
-            if(to.name && from.name){
-              store.dispatch("setCurrentPath",to.name)
-            }
-            next()
+          })
+          window.onfocus = () => {
+            AuthProvider.init().refreshToken()
           }
-        })
-        window.onfocus = () => {
-          AuthProvider.init().refreshToken()
+          new Vue({
+            router,
+            store,
+            i18n,
+            render: (h:any) => h(appComponent),
+          }).$mount('#mainDiv')
         }
-        new Vue({
-          router,
-          store,
-          i18n,
-          render: (h:any) => h(appComponent),
-        }).$mount('#mainDiv')
-      }
-  )
-}).catch(error =>{
-  console.error("Auth not access");
-  console.error(error);
+    )
+  }).catch(error =>{
+    console.error("Auth not access");
+    console.error(error);
+  })
 })
 
 

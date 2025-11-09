@@ -23,7 +23,7 @@ export class ApiWS {
         this._socket = value;
     }
 
-    private _URL : string = process.env.VUE_APP_BASE_URL_GATEWAY + notificationApi('/notification/socket')
+    private _URL : string = notificationApi('/notification/socket')
     private _ws : WebSocket | null = null;
     private _socket : Client | null = null;
     private _isConnect = false;

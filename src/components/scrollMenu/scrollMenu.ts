@@ -1,7 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {AuthProvider} from "@/auth/AuthProvider";
-import {Authority} from "@/models/auth-service";
+import {UserInfo} from "@/models/user-service";
+import {Company, CompanyHierarchy, Employee} from "@/models/company-service";
 
 @Component({
     components: {
@@ -10,20 +10,27 @@ import {Authority} from "@/models/auth-service";
 export default class ScrollMenu extends Vue {
 
     private side : boolean = true
-    private authority : Array<Authority> | undefined = undefined;//AuthProvider.init().userInfo?.authorities
+    private userInfo : UserInfo = this.$store.getters.userInfo
+    private company : Company | null = this.userInfo.company
+    private employee : Employee | null = this.userInfo.employee
 
 
-    public hasCompany() : boolean{
-        return !!this.$store.getters.myCompany
+
+        public hasCompany() : boolean{
+        return !!this.company
     }
 
     public isEnabled(value : Array<string>) : boolean{
-        const result = this.authority?.find(item => value.includes(item.authority));
+        const result = this.authority?.find(item => value.includes(item));
         return !!result
     }
 
     public submit(pathName : string){
         this.$router.push(pathName)
+    }
+
+    get authority() : Array<CompanyHierarchy> | undefined {
+        return this.employee?.permissions
     }
 
 }

@@ -14,9 +14,9 @@ import {convertCookieLocale} from "@/store/util/LocaleUtil";
 import {ApiWS} from "@/api/apiWS";
 import {NotificationMessage} from "@/models/notification-service";
 import {LocaleItem, Page} from "@/models/main";
-import {notificationApi, userApi} from "@/api/apiUtil";
 import {UserInfo} from "@/models/user-service";
 import {AuthProvider} from "@/auth/AuthProvider";
+import {notificationApi, userApi} from "@/api/apiUtil";
 
 Vue.use(Vuex);
 Vue.use(VueCookies);
@@ -48,7 +48,6 @@ export default class App extends Vue {
     }
 
     created(){
-        this.api.init();
         this.mainSocket.connect();
         const locale : LocaleItem = this.$store.getters.locale;
         if(locale){
@@ -68,16 +67,13 @@ export default class App extends Vue {
         }, err => {
             console.error("Position user not set");
         })
-        this.api.getApi<UserInfo>(userApi("/user/"+AuthProvider.init().userInfo?.uuid)).then(value => {
-            this.$store.commit("setUserInfo", value);
-            const requestParams = new URLSearchParams();
-            requestParams.append("received", "false");
-            requestParams.append("toUser", value.user.username);
-            requestParams.append("size", "100");
-            this.api.getApi<Page<NotificationMessage>>(notificationApi("/notification/message"), requestParams).then(value => {
-                value.content.forEach(item => this.$store.commit("setNotification",item));
-            });
-        })
+        const requestParams = new URLSearchParams();
+        requestParams.append("received", "false");
+        requestParams.append("toUser", this.$store.getters.userInfo.user.username);
+        requestParams.append("size", "100");
+        this.api.getApi<Page<NotificationMessage>>(notificationApi("/notification/message"), requestParams).then(value => {
+            value.content.forEach(item => this.$store.commit("setNotification",item));
+        });
     }
 
     get socket() {

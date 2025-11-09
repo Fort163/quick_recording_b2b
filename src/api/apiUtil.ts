@@ -22,7 +22,7 @@ export function createUri(service: string,uri: string, version?: ApiVersion):str
     if(!version){
         version = ApiVersion.v1;
     }
-    return service + version.toString() + uri;
+    return process.env.VUE_APP_BASE_URL_GATEWAY + service + version.toString() + uri;
 }
 
 export enum ApiVersion{

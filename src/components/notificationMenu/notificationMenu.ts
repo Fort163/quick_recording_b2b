@@ -2,12 +2,10 @@ import Component from "vue-class-component";
 import Vue from "vue";
 import {NotificationMessage} from "@/models/notification-service";
 import {MessageType} from "@/models/message";
-import {Page} from "@/models/main";
 import {notificationApi, qrB2BApi} from "@/api/apiUtil";
 import {Inject} from "vue-property-decorator";
 import {ApiB2B} from "@/api/api";
 import {AuthProvider} from "@/auth/AuthProvider";
-import {Company} from "@/models/company-service";
 
 @Component({
     components: {}

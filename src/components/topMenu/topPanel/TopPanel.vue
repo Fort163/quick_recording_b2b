@@ -27,6 +27,9 @@
       </div>
     </transition-group>
   </div>
+  <div v-else>
+    {{this.$store}}
+  </div>
 </template>
 
 <script src="./topPanel.ts"></script>

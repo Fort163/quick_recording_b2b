@@ -11,30 +11,21 @@ interface Api {
     postApi<T>(uri:string,data?:any):Promise<T>,
     putApi<T>(uri: string,data?:any): Promise<T>,
     patchApi<T>(uri: string,data?:any): Promise<T>,
+    deleteApi<T>(uri: string,data?:any): Promise<T>
 }
 
 export class ApiB2B implements Api{
-    private _URL : string;
     private store: Store<any>
     private translate : VueI18n
 
     constructor(store: Store<any>, translate : VueI18n ) {
-        this._URL = process.env.VUE_APP_BASE_URL_GATEWAY;
         this.store = store;
         this.translate = translate;
     }
 
-    get URL(): string {
-        return this._URL;
-    }
-
-    set URL(value: string) {
-        this._URL = value;
-    }
-
     getApi<T>(uri: string, param?: URLSearchParams, maskOff?: boolean): Promise<T> {
         this.loadMask(!maskOff);
-        let url = this._URL + uri;
+        let url = uri;
         if(param){
             url = url.concat('?' + param)
         }
@@ -54,7 +45,7 @@ export class ApiB2B implements Api{
 
     postApi<T>(uri:string,data?:any, maskOff?: boolean): Promise<T> {
         this.loadMask(!maskOff);
-        return axios.post(this._URL + uri,data)
+        return axios.post(uri,data)
             .then((response:any) => {
                     this.loadMask(false);
                     return response.data;
@@ -71,7 +62,7 @@ export class ApiB2B implements Api{
 
     getBlob(uri:string,data?:any): Promise<Blob>{
         this.loadMask(true);
-        return axios.post(this._URL + uri,data,{responseType: 'blob'})
+        return axios.post(uri,data,{responseType: 'blob'})
             .then((response:any) => {
                     this.loadMask(false);
                     return response.data;
@@ -87,7 +78,7 @@ export class ApiB2B implements Api{
 
     putApi<T>(uri: string,data?:any, maskOff?: boolean): Promise<T> {
         this.loadMask(!maskOff);
-        return axios.put(this._URL + uri,data)
+        return axios.put(uri,data)
             .then((response: any) => {
                     console.warn(response)
                     this.loadMask(false);
@@ -104,7 +95,7 @@ export class ApiB2B implements Api{
 
     patchApi<T>(uri: string,data?:any, maskOff?: boolean): Promise<T> {
         this.loadMask(!maskOff);
-        return axios.patch(this._URL + uri,data)
+        return axios.patch(uri,data)
             .then((response: any) => {
                     this.loadMask(false);
                     return response.data;
@@ -120,7 +111,7 @@ export class ApiB2B implements Api{
 
     deleteApi<T>(uri: string, param?: URLSearchParams, maskOff?: boolean): Promise<T> {
         this.loadMask(!maskOff);
-        let url = this._URL + uri;
+        let url = uri;
         if(param){
             url = url.concat('?' + param)
         }
@@ -136,16 +127,6 @@ export class ApiB2B implements Api{
                 const apiError : ApiError = <ApiError>response.data;
                 this.handleError(apiError, response.status)
             })
-    }
-
-    public init(){
-        axios.interceptors.request.use(function (config) {
-            const provider = AuthProvider.init()
-            const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
-            config.headers.Authorization =  token;
-            config.withCredentials = true
-            return config;
-        })
     }
 
     private handleError(error : ApiError, status: number){
