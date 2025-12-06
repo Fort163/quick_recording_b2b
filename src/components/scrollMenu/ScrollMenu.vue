@@ -47,5 +47,42 @@
   </div>
 </template>
 
-<script src="./scrollMenu.ts"></script>
+<script lang="ts">
+import {Component, Vue} from "vue-facing-decorator";
+import {UserInfo} from "@/models/user-service";
+import {Company, CompanyHierarchy, Employee} from "@/models/company-service";
+import router from "@/router";
+import {useAppStore} from "@/store/qrAppState";
+
+@Component({
+  components: {}
+})
+export default class ScrollMenu extends Vue {
+
+  private side: boolean = true
+  private store = useAppStore();
+  private userInfo: UserInfo = this.store.userInfo
+  private company: Company | null = this.userInfo.company
+  private employee: Employee | null = this.userInfo.employee
+
+
+  public hasCompany(): boolean {
+    return !!this.company
+  }
+
+  public isEnabled(value: Array<string>): boolean {
+    const result = this.authority?.find(item => value.includes(item));
+    return !!result
+  }
+
+  public submit(pathName: string) {
+    router.push(pathName)
+  }
+
+  get authority(): Array<CompanyHierarchy> | undefined {
+    return this.employee?.permissions
+  }
+
+}
+</script>
 <style src="./scrollMenu.css"></style>

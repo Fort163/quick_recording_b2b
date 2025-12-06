@@ -24,12 +24,12 @@
         <div :class="'h-layout'" style="width: 50%; margin-left: 10px">
           <Button v-if="!emailVerified && !emailCodeSend" :errors="emailError" :width="'100%'" :height="50" :radius="10" :color="'inherit'"
                   style="margin-left: 20px;margin-top: 10px"
-                  :text="this.$t('label.editUser.button.sendCode')" @click="createCodeEmail()"/>
+                  :text="this.$t('label.editUser.customButton.sendCode')" @click="createCodeEmail()"/>
           <InputText v-if="emailCodeSend && !emailVerified" :label="this.$t('label.editUser.field.codeFromEmail')" autofocus v-model="emailCode"/>
           <Button v-if="!emailVerified && emailCodeSendAgain" :image="'send-again.png'"
-                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.button.sendAgain')" @click="createCodeEmail()"/>
+                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.customButton.sendAgain')" @click="createCodeEmail()"/>
           <Button v-if="emailCodeSend && !emailVerified" :image="'submit.png'"
-                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.button.confirmCode')" :errors="emailError" @click="checkCodeEmail()"/>
+                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.customButton.confirmCode')" :errors="emailError" @click="checkCodeEmail()"/>
         </div>
       </div>
       <div :class="'h-layout'">
@@ -45,12 +45,12 @@
         <div :class="'h-layout'" style="width: 50%; margin-left: 10px">
           <Button v-if="!phoneVerified && !phoneCodeSend" :errors="phoneError" :width="'100%'" :height="50" :radius="10" :color="'inherit'"
                   style="margin-left: 20px;margin-top: 10px"
-                  :text="this.$t('label.editUser.button.sendCode')" @click="createCodePhone()"/>
+                  :text="this.$t('label.editUser.customButton.sendCode')" @click="createCodePhone()"/>
           <InputText v-if="!phoneVerified && phoneCodeSend" autofocus :label="this.$t('label.editUser.field.codeFromCall')" v-model="phoneCode"/>
           <Button v-if="!phoneVerified && phoneCodeSendAgain" :image="'send-again.png'"
-                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.button.sendAgain')" @click="createCodePhone()"/>
+                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.customButton.sendAgain')" @click="createCodePhone()"/>
           <Button v-if="phoneCodeSend && !phoneVerified" :errors="phoneError" :image="'submit.png'"
-                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.button.confirmCode')" @click="checkCodePhone()"/>
+                  style="margin-left: 20px;margin-top: 10px" :text="this.$t('label.editUser.customButton.confirmCode')" @click="checkCodePhone()"/>
         </div>
       </div>
       <div :class="'h-layout'">
@@ -68,7 +68,7 @@
       </div>
       <div :class="'h-layout'" style="flex-direction: row-reverse">
         <Button  :errors="this.pageError" :height="50" :width="200" :radius="15" :color="'#a4fdc0'" style="margin-left: 20px;margin-top: 10px"
-                :text="this.$t('label.editUser.button.sendData')" @click="submit()"/>
+                :text="this.$t('label.editUser.customButton.sendData')" @click="submit()"/>
       </div>
     </div>
   </div>

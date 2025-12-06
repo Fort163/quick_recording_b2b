@@ -1,14 +1,14 @@
-import Vuex, {Store} from "vuex";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {AuthProvider} from "@/auth/AuthProvider";
 import {convertI18nLocale} from "@/store/util/LocaleUtil";
-import i18n from "@/locales/i18n";
-import {notificationApi, qrB2BApi, userApi} from "@/api/apiUtil";
-import {CreateCompany, LocaleItem, MapInfo, Page, State} from "@/models/main";
+import {qrB2BApi, userApi} from "@/api/apiUtil";
+import {CreateCompany, LocaleItem, MapInfo, State} from "@/models/main";
 import {ErrorWindow, LoadMask, MaskModel, ModalWindow} from "@/models/modal";
 import {Company} from "@/models/company-service";
 import {NotificationMessage} from "@/models/notification-service";
 import {UserInfo} from "@/models/user-service";
+import {useI18n} from "vue-i18n";
+import {Store} from "pinia";
 
 function defaultMapInfo(): MapInfo {
     return {
@@ -23,7 +23,8 @@ function defaultMapInfo(): MapInfo {
 }
 
 function defaultLocale(): LocaleItem {
-    let locale = convertI18nLocale(i18n.locale);
+    const i18n = useI18n();
+    let locale = convertI18nLocale(i18n.locale.value);
     if (!locale) {
         locale = new LocaleItem("ru", "ru", "ru_RU", "ru_RU");
     }
@@ -40,7 +41,7 @@ class AppState implements State {
     notifications: Array<NotificationMessage>
 
     constructor() {
-        this.currentPath = 'home'
+        this.currentPath = 'homePage'
         this.createCompany = new class implements CreateCompany {
             company : Company | null = null;
             created : boolean = false;
@@ -160,49 +161,4 @@ function createStore(state: State): Store<State> {
         }
     });
     return storeApp;
-}
-
-export function initAxios(): Promise<Boolean> {
-    return new Promise<Boolean>((resolve, reject) => {
-        try {
-            axios.interceptors.request.use(function (config) {
-                const provider = AuthProvider.init()
-                const token = provider.getToken()?.token_type + ' ' + provider.getToken()?.access_token;
-                config.headers.Authorization =  token;
-                config.withCredentials = true
-                return config;
-            })
-            resolve(true);
-        }
-        catch (exception){
-            resolve(false);
-        }
-    });
-}
-
-export function updateState(state : State) : Promise<State> {
-    return new Promise<State>(resolve => {
-        axios.get<UserInfo>(userApi("/user/"+AuthProvider.init().userInfo?.uuid)).then(response => {
-            const userInfo : UserInfo = response.data;
-            state.userInfo = userInfo;
-            resolve(state);
-        }).catch(reason => {
-            throw new Error("Error get userInfo!")
-        })
-    })
-}
-
-export function initStore(): Promise<Store<State>> {
-    return new Promise<Store<State>>((resolve, reject) => {
-        getState().then(state => {
-            updateState(state).then(updatedState =>
-                resolve(createStore(updatedState))
-            ).catch(reason => {
-                throw new Error("State not updated");
-            })
-        }).catch(reason => {
-            console.error("Error not create store!")
-            console.error(reason)
-        })
-    })
 }

@@ -1,20 +1,26 @@
-import Vue from "vue";
-import {Prop} from "vue-property-decorator";
 import {Restriction} from "@/models/error";
+import {Component, Prop, Vue} from "vue-facing-decorator";
 
+@Component({
+
+})
 export abstract class ValueComponent extends Vue {
     /*
         Возвращает текущее значение компонента
      */
-    abstract getValue() : any;
+    abstract getValue();
 
 }
 
+@Component({
+
+})
 export abstract class CheckComponent extends ValueComponent {
 
     /*
         Ограничения срабатывают при выборе значения
      */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     @Prop() private restrictions: Array<Function> | undefined
 
     private errors: Array<Restriction> = new Array<Restriction>();

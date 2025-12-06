@@ -1,0 +1,202 @@
+{
+  "label": {
+    "search": "Поиск",
+    "topPanel": {
+      "exit": "Выход",
+      "changeInfo": "Изменить данные",
+      "home": "Домой"
+    },
+    "inputSchedule": {
+      "field": {
+        "start": "Начало",
+        "end": "Конец"
+      },
+      "restriction": {
+        "start": {
+          "fieldName": "Время начала"
+        },
+        "end": {
+          "fieldName": "Время окончания"
+        }
+      },
+      "button": {
+        "isWorkDay": "Рабочий день?"
+      }
+    },
+    "scheduleComponent": {
+      "button": {
+        "repeat": "Повторить"
+      }
+    },
+    "editUser": {
+      "field": {
+        "lastName": "Фамилия",
+        "firstName": "Имя",
+        "email": "Почта",
+        "phone": "Мобильный телефон",
+        "codeFromEmail": "Код с почты",
+        "codeFromCall": "Код из звонка",
+        "birthDay": "Дата рождения",
+        "gender": "Выберите пол"
+      },
+      "button": {
+        "sendCode": "Отправить код",
+        "sendAgain": "Отправить повторно",
+        "confirmCode": "Подтвердить код",
+        "sendData": "Отправить данные"
+      },
+      "restriction": {
+        "lastName": {
+          "fieldName": "фамилия",
+          "checkCharacterLetters": "Фамилия может содержать только буквы"
+        },
+        "firstName": {
+          "fieldName": "имя",
+          "checkCharacterLetters": "Имя может содержать только буквы"
+        },
+        "email": {
+          "fieldName": "Почта"
+        },
+        "phone": {
+          "fieldName": "мобильный телефон"
+        },
+        "birthDay": {
+          "fieldName": "Дата рождения"
+        },
+        "gender": {
+          "fieldName": "пол"
+        },
+        "inputEmail": "Заполните Email",
+        "inputPhone": "Введите номер телефона",
+        "confirmEmail": "Подтвердите Email",
+        "confirmPhone": "Подтвердите телефон",
+        "wrongCode": "Неверный код"
+      },
+      "notConfirmed": "Не потвержден"
+    },
+    "scrollMenu": {
+      "label": {
+        "company": "Компания:",
+        "create": "создать",
+        "join": "вступить",
+        "itsOwn": "своя",
+        "record": "Записи:",
+        "my": "мои",
+        "recordCompany": "компании",
+        "workers": "Работники:",
+        "add": "добавить",
+        "edit": "редактировать",
+        "settings": "Настройки:",
+        "settingsCompany": "компании",
+        "services": "услуги",
+        "time": "времени",
+        "statistics": "Статистика:",
+        "byCompany": "по компании",
+        "byWorker": "по работнику"
+      }
+    },
+    "createCompany": {
+      "companyStep": {
+        "field": {
+          "companyName": "Название компании",
+          "activity": "Виды деятельности",
+          "activityPlaceholder": "Выберите виды деятельности"
+        },
+        "restriction": {
+          "companyName": {
+            "fieldName": "Название компании"
+          },
+          "activity": {
+            "fieldName": "Виды деятельности"
+          }
+        }
+      },
+      "companyStep_2": {
+        "title": "Укажите адрес компании",
+        "hint": "Адрес вашей компании",
+        "myCompany": "Моя компания"
+      },
+      "companyStep_3": {
+        "title": "Укажите рабочий график компании",
+        "restriction": {
+          "haveWorkDay": "У организации должен быть хотя бы один рабочий день"
+        }
+      },
+      "companyStep_4": {
+        "name": "Название : ",
+        "address": "Адрес : ",
+        "activity": "Виды деятельности : ",
+        "schedule": "График : ",
+        "scheduleString": "{dayOfWeek} c {clockFrom} до {clockTo}",
+        "button": {
+          "create": "Создать"
+        }
+      },
+      "button": {
+        "next": "Далее",
+        "back": "Назад"
+      }
+    }
+  },
+  "restriction": {
+    "default": {
+      "checkNotNull": {
+        "withField": "Поле {fieldName} обязательно для заполнения",
+        "noField": "Поле обязательно для заполнения"
+      },
+      "checkCharacterLetters": "Здесь возможны только буквы",
+      "checkEmail": "Не верный формат почты",
+      "checkPhone": "Не верный формат телефона",
+      "checkDate": {
+        "field": "Дата",
+        "between": " должна быть в промежутке от ",
+        "to": " до ",
+        "later": " должна быть позднее ",
+        "noLater": " должна быть не позднее "
+      },
+      "checkCharacterLength": {
+        "min": "Минимальное кол-во символов - {countMin}",
+        "max": "Максимальное кол-во символов - {countMax}"
+      },
+      "checkArrayCount": {
+        "min": "Минимальное кол-во элементов - {countMin}",
+        "max": "Максимальное кол-во элементов - {countMax}"
+      },
+      "checkSchedule": {
+        "interval": "Неверный интервал времени в {dayOfWeek}",
+        "start": "Заполните время начала рабочего дня в {dayOfWeek}",
+        "end": "Заполните время окончания рабочего дня в {dayOfWeek}"
+      }
+    }
+  },
+  "enums": {
+    "gender": {
+      "male": "Мужской",
+      "female": "Женский",
+      "notDefined": "Не определено"
+    },
+    "dayOfWeek": {
+      "monday": "Понедельник",
+      "tuesday": "Вторник",
+      "wednesday": "Среда",
+      "thursday": "Четверг",
+      "friday": "Пятница",
+      "saturday": "Суббота",
+      "sunday": "Воскресенье"
+    }
+  },
+  "notification":{
+    "label":{
+      "info":"Информационные",
+      "warning":"Пердупреждения",
+      "redirect":"Перенаправления",
+      "logout":"Обновления",
+      "action":"Действия"
+    },
+    "message": {
+      "role-updated" : "Роль изменена",
+      "you-added" : "Вас добавили в компанию",
+      "you-create-company" : "Вы создали свою компанию"
+    }
+  }
+}

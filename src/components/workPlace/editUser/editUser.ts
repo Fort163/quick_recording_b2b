@@ -1,33 +1,18 @@
-import Component from "vue-class-component";
-import Vue from "vue";
-import {Inject} from "vue-property-decorator";
-import InputText from "@/components/inputText/InputText.vue";
-import Button from "@/components/button/Button.vue";
-import {ApiB2B} from "@/api/api";
-import InputDate from "@/components/inputDate/InputDate.vue";
-import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
-import {DateUtil} from "@/store/util/DateUtil";
-import ComboBox from "@/components/comboBox/ComboBox.vue";
-import {authApi, notificationApi, qrB2BApi} from "@/api/apiUtil";
-import {Combo, ComboItem} from "@/models/component";
-import {User, UserChange} from "@/models/auth-service";
-import {MailCodeClass, MailResult} from "@/models/notification-service";
-import {Base, Result, TemplateEnum} from "@/models/main";
-import {Errors} from "@/models/error";
-import {UserInfo} from "@/models/user-service";
+import {Component, toNative, Vue} from "vue-facing-decorator";
+import {VueCons} from "vue-facing-decorator/dist/esm/class";
 
 @Component({
     components: {
-        InputText,
+        /*InputText,
         InputDate,
-        Button,
-        ComboBox
+        CustomButton,
+        ComboBox*/
     }
 
 })
 export default class EditUser extends Vue {
 
-    @Inject('api') api: ApiB2B | undefined;
+    /*@Inject('api') api: ApiB2B | undefined;
     private info : UserChange | null = null
     private genderCombo : ComboItem | null = null
     private emailCode : string | null  = null
@@ -182,6 +167,6 @@ export default class EditUser extends Vue {
 
     private getGender(gender : string) : ComboItem{
         return <ComboItem>this.createGender().find(item => item.key === gender)
-    }
+    }*/
 
 }

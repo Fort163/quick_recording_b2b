@@ -1,20 +1,19 @@
-import Component from "vue-class-component";
-import Vue from "vue";
-import {Inject} from "vue-property-decorator";
-import Button from "@/components/button/Button.vue";
+import {Component, toNative, Vue} from "vue-facing-decorator";
+import {VueCons} from "vue-facing-decorator/dist/esm/class";
+import CustomButton from "@/components/customButton/CustomButton.vue";
 import {ApiB2B} from "@/api/api";
 import {qrB2BApi} from "@/api/apiUtil";
 import {Company, Schedule} from "@/models/company-service";
 
 @Component({
     components: {
-        Button
+        /*CustomButton*/
     }
 
 })
-export default class CompanyStep_4 extends Vue {
+export class CompanyStep_4 extends Vue {
 
-    @Inject('api') api: ApiB2B | undefined;
+    /*@Inject('api') api: ApiB2B | undefined;
     private company : Company = this.$store.getters.createCompany
     private pageError : Array<string> = new Array<string>()
 
@@ -34,6 +33,8 @@ export default class CompanyStep_4 extends Vue {
 
     public back(){
         this.$router.push('step_3')
-    }
+    }*/
 
 }
+
+export default toNative(<VueCons>CompanyStep_4);

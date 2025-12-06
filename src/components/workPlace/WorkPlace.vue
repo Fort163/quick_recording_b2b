@@ -6,6 +6,18 @@
   </div>
 </template>
 
-<script src="./workPlace.ts"></script>
+<script lang="ts" >
+import {Component, Vue} from "vue-facing-decorator";
+
+@Component({
+  components: {
+  }
+
+})
+export default class WorkPlace extends Vue {
+
+}
+
+</script>
 
 <style src="./workPlace.css"></style>

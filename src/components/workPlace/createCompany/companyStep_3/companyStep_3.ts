@@ -1,6 +1,6 @@
-import Component from "vue-class-component";
-import Vue from "vue";
-import Button from "@/components/button/Button.vue";
+import {Component, toNative, Vue} from "vue-facing-decorator";
+import {VueCons} from "vue-facing-decorator/dist/esm/class";
+import CustomButton from "@/components/customButton/CustomButton.vue";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import ScheduleComponent from "@/components/scheduleComponent/ScheduleComponent.vue";
 import {Company, NewSchedule} from "@/models/company-service";
@@ -9,14 +9,14 @@ import {Errors} from "@/models/error";
 
 @Component({
     components: {
-        Button,
-        ScheduleComponent
+        /*CustomButton,
+        ScheduleComponent*/
     }
 
 })
-export default class CompanyStep_3 extends Vue {
+export class CompanyStep_3 extends Vue {
 
-    private company : Company = this.$store.getters.createCompany
+    /*private company : Company = this.$store.getters.createCompany
     private restriction : RestrictionFactory = new RestrictionFactory();
     private pageError : Array<string> = new Array<string>()
 
@@ -49,6 +49,8 @@ export default class CompanyStep_3 extends Vue {
 
     public back(){
         this.$router.push('step_2')
-    }
+    }*/
 
 }
+
+export default toNative(<VueCons>CompanyStep_3);

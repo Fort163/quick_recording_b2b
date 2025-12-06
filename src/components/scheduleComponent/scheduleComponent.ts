@@ -3,13 +3,13 @@ import {Prop} from "vue-property-decorator";
 import {RestrictionFactory} from "@/store/restriction/RestrictionFactory";
 import {CheckComponent} from "@/store/component";
 import InputSchedule from "@/components/inputSchedule/InputSchedule.vue";
-import Button from "@/components/button/Button.vue";
+import CustomButton from "@/components/customButton/CustomButton.vue";
 import {Schedule} from "@/models/company-service";
 
 @Component({
     components: {
         InputSchedule,
-        Button
+        Button: CustomButton
     }
 })
 export default class ScheduleComponent extends CheckComponent {

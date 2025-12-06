@@ -26,7 +26,7 @@
       <transition name="error-window-animation">
         <div key="windowError" v-if="this.showErrorWindow" :class="'errorWindow'">
           <div :class="'errorWindowTopPanel'">
-            <Button :image="'close.png'" style="padding: 1%" :size="'15px'" :backgroundSize="'100%'" @click="closeErrorWindow()"/>
+            <CustomButton :image="'close.png'" style="padding: 1%" :size="'15px'" :backgroundSize="'100%'" @click="closeErrorWindow()"/>
           </div>
           <div :class="'errorWindowBody'">
             {{ this.errorWindow.error.message }}
@@ -40,7 +40,59 @@
   </div>
 </template>
 
-<script src="./modalMask.ts">
+<script lang="ts">
+import {Component, Vue} from "vue-facing-decorator";
+import {State} from "@/models/main";
+import {ErrorWindow, LoadMask, MaskModel} from "@/models/modal";
+import {useAppStore} from "@/store/qrAppState";
+import CustomButton from "@/components/customButton/CustomButton.vue";
+
+@Component({
+  components:{
+    CustomButton
+  }
+})
+export default class ModalMask extends Vue {
+
+  private store = useAppStore();
+
+  updated() {
+    if(this.showErrorWindow){
+      setTimeout(() => {
+        this.$store.commit("setErrorWindow", null)
+      }, 6000);
+    }
+  }
+
+  get state() : State {
+    return this.store
+  }
+
+  get mask() : MaskModel {
+    return this.state.mask;
+  }
+
+  get errorWindow() : ErrorWindow | null{
+    return this.mask.errorWindow;
+  }
+
+  get showErrorWindow() : boolean | undefined{
+    return this.errorWindow?.show;
+  }
+
+  get loadMask() : LoadMask | null{
+    return this.mask.loadMask;
+  }
+
+  get showLoadMask() : boolean | undefined{
+    return this.loadMask?.show;
+  }
+
+  public closeErrorWindow() : void {
+    this.store.mask.errorWindow = null;
+  }
+
+}
 </script>
 
 <style src="./modalMask.css">

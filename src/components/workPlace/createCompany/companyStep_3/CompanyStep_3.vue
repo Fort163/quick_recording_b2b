@@ -6,13 +6,13 @@
     </div>
     <div :class="'h-layout'" style="flex-direction: row-reverse">
       <Button  :errors="this.pageError" :height="50" :width="200" :radius="15" :color="'#a4fdc0'" style="margin-left: auto;margin-top: 10px"
-               :text="this.$t('label.createCompany.button.next')" @click="submit()"/>
+               :text="this.$t('label.createCompany.customButton.next')" @click="submit()"/>
       <Button  :height="50" :width="200" :radius="15" :color="'inherit'" style="margin-right: auto;margin-top: 10px"
-               :text="this.$t('label.createCompany.button.back')" @click="back()"/>
+               :text="this.$t('label.createCompany.customButton.back')" @click="back()"/>
     </div>
   </div>
 </template>
 
-<script src="./companyStep_3.ts"></script>
+<script lang="ts" src="./companyStep_3.ts"></script>
 
 <style src="./companyStep_3.css"></style>

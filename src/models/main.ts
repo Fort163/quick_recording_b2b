@@ -2,10 +2,12 @@ import {MaskModel} from "@/models/modal";
 import {Company} from "@/models/company-service";
 import {NotificationMessage} from "@/models/notification-service";
 import {UserInfo} from "@/models/user-service";
+import {StateTree} from "pinia";
 
-export interface State{
+export interface State extends StateTree{
     currentPath : string
-    createCompany : CreateCompany
+    createCompany : CreateCompanyInterface | null
+    joinCompany : JoinCompanyInterface | null
     userInfo : UserInfo | null
     mapInfo : MapInfo
     mask : MaskModel
@@ -13,9 +15,17 @@ export interface State{
     notifications: Array<NotificationMessage>
 }
 
-export interface CreateCompany{
+export interface CreateCompanyInterface{
     company : Company | null;
     created : boolean;
+}
+
+export interface JoinCompanyInterface {
+    coords : GeolocationCoordinates | null
+    editCoords : boolean;
+    selectCompany : Company | null;
+    selectActivity : Activity | null;
+    joined : boolean;
 }
 
 export interface Base{
@@ -39,10 +49,7 @@ export interface MapInfo{
 }
 
 export interface MapSettings{
-    apiKey: string,
-    lang: string,
-    coordorder: string,
-    version: string
+    lang: string
 }
 
 export interface PageInfo {

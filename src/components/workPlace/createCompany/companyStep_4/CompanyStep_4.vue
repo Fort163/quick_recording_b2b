@@ -25,13 +25,13 @@
     <div v-if="!this.$store.getters.createCompanyCreated" :class="'h-layout'" style="flex-direction: row-reverse">
       <Button :errors="this.pageError" :height="50" :width="200" :radius="15" :color="'#a4fdc0'"
               style="margin-left: auto;margin-top: 10px"
-              :text="this.$t('label.createCompany.companyStep_4.button.create')" @click="submit()"/>
+              :text="this.$t('label.createCompany.companyStep_4.customButton.create')" @click="submit()"/>
       <Button :height="50" :width="200" :radius="15" :color="'inherit'" style="margin-right: auto;margin-top: 10px"
-              :text="this.$t('label.createCompany.button.back')" @click="back()"/>
+              :text="this.$t('label.createCompany.customButton.back')" @click="back()"/>
     </div>
   </div>
 </template>
 
-<script src="./companyStep_4.ts"></script>
+<script lang="ts" src="./companyStep_4.ts"></script>
 
 <style src="./companyStep_4.css"></style>

@@ -1,157 +1,108 @@
-import appComponent from './app/App.vue'
-import  Vue from 'vue'
-import VueRouter from "vue-router";
-import Home from "@/components/workPlace/home/Home.vue";
-import EditUser from "@/components/workPlace/editUser/EditUser.vue";
 import {AuthProvider} from "@/auth/AuthProvider";
-import {initAxios, initStore} from "@/store/store";
-import CreateCompany from "@/components/workPlace/createCompany/СreateCompany.vue";
-import i18n from "@/locales/i18n";
-import JoinCompany from "@/components/workPlace/joinCompany/JoinCompany.vue";
+import i18n from "@/i18n";
+import uniqIdPlugin from "@/uniqId";
+import router from '@/router'
+import App from "@/app/App.vue";
+import {createApp} from "vue";
+import {createPinia} from "pinia";
+import {VueCookieNext} from 'vue-cookie-next'
+import {initAxios} from "@/axios";
+import {useAppStore} from "@/store/qrAppState";
+import {LocalePicker} from "@/components/topMenu/localePicker/LocalePicker.vue";
+import CustomButton from "@/components/customButton/CustomButton.vue";
+import ComboBox from "@/components/comboBox/ComboBox.vue";
+import InputText from "@/components/inputText/InputText.vue";
+import { createYmaps } from 'vue-yandex-maps';
 
-Vue.use(VueRouter);
+const app = createApp(App);
 
+//register component
+app.component('ComboBox', ComboBox);
+app.component('CustomButton', CustomButton);
+app.component('InputText', InputText);
 
-const routes = [
-  {
-    path: "/",
-    name: 'home',
-    component: Home,
-  },
-  {
-    path: "/editUser",
-    name: 'editUser',
-    component: EditUser,
-  },
-  {
-    path: "/createCompany",
-    name: 'createCompany',
-    component: CreateCompany,
-  },
-  {
-    path: "/step_1",
-    name: 'step_1',
-    component: CreateCompany,
-  },
-  {
-    path: "/step_2",
-    name: 'step_2',
-    component: CreateCompany,
-  },
-  {
-    path: "/step_3",
-    name: 'step_3',
-    component: CreateCompany,
-  },
-  {
-    path: "/step_4",
-    name: 'step_4',
-    component: CreateCompany,
-  },
-  {
-    path: "/joinCompany",
-    name: 'joinCompany',
-    component: JoinCompany,
-  },
-  {
-    path: "/join_step_1",
-    name: 'join_step_1',
-    component: JoinCompany,
-  },
-  {
-    path: "/join_step_2",
-    name: 'join_step_2',
-    component: JoinCompany,
-  },
-  {
-    path: "/myCompany",
-    name: 'myCompany',
-    component: Home,
-  },
-  {
-    path: "/myRecord",
-    name: 'myRecord',
-    component: Home,
-  },
-  {
-    path: "/companyRecord",
-    name: 'companyRecord',
-    component: Home,
-  },
-  {
-    path: "/addEmployee",
-    name: 'addEmployee',
-    component: Home,
-  },
-  {
-    path: "/editEmployee",
-    name: 'editEmployee',
-    component: Home,
-  },
-  {
-    path: "/settingsCompany",
-    name: 'settingsCompany',
-    component: Home,
-  },
-  {
-    path: "/settingsService",
-    name: 'settingsService',
-    component: Home,
-  },
-  {
-    path: "/settingsSchedule",
-    name: 'settingsSchedule',
-    component: Home,
-  },
-  {
-    path: "/statisticCompany",
-    name: 'statisticCompany',
-    component: Home,
-  },
-  {
-    path: "/statisticEmployee",
-    name: 'statisticEmployee',
-    component: Home,
-  }
-];
+/*app.component('CompanyStep_2', CompanyStep_2);
+app.component('CompanyStep_3', CompanyStep_3);
+app.component('CompanyStep_4', CompanyStep_4);*/
 
-const router = new VueRouter({
-  routes,
-  mode: "history"
-});
+//register library
+app.use(createPinia())
+app.use(router)
+app.use(i18n);
+app.use(uniqIdPlugin);
+app.use(VueCookieNext);
 
 
+router.isReady().then(value1 => {
+    AuthProvider.init().getAuthorization().then(auth => {
+        initAxios().then(isInit => {
+            if (!isInit) {
+                throw new Error("Axios not init!")
+            }
+            const store = useAppStore();
+            store.uploadStore().then(value => {
+                const settings = value.mapInfo.settings;
+                app.use(createYmaps({
+                    apikey: import.meta.env.VITE_YANDEX_MAP_API_KEY,
+                    lang: settings.lang,
+                    initializeOn: 'onPluginInit'
+                }))
+                if (router.currentRoute.value.path === '/login' && router.currentRoute.value.query.code != null) {
+                    if (store.currentPath) {
+                        router.push({name: value.currentPath})
+                    } else {
+                        router.push({name: 'home'});
+                    }
+                }
+                router.beforeEach((to, from, next) => {
+                    if (to.path === '/login' && to.query.code != null) {
+                        if(store.currentPath){
+                            next({name: store.currentPath})
+                        }
+                        else {
+                            next({name: 'homePage'});
+                        }
+                    } else {
+                        if(to.name && from.name){
+                            store.setCurrentPath(to.name).then(isUpdateStore => {
+                                if(isUpdateStore){
+                                    console.debug("Store updated")
+                                }
+                                else {
+                                    console.debug("Store not updated")
+                                }
+                            }).catch(reason => console.debug("Store error when update" + reason.toString()))
+                        }
+                        next()
+                    }
+                })
+                window.onfocus = () => {
+                    AuthProvider.init().refreshToken().then(refresh => console.info("Token refresh"));
+                }
+                app.mount('#app');
+            });
+        })
+    }).catch(error => {
+        console.error("Auth not access");
+        console.error(error);
+    })
+})
 
 
-Vue.config.productionTip = false
-
-Vue.use({
-  install: function(Vue, options) {
-    Object.defineProperty(Vue.prototype, "uniqId", {
-      get: function uniqId() {
-        if ('_uid' in this) {
-          return this._uid;
-        }
-        throw new Error("_uid property does not exist");
-      }
-    });
-  }
-});
-
-AuthProvider.init().getAuthorization().then(auth =>{
+/*AuthProvider.init().getAuthorization().then(auth =>{
   initAxios().then(isInit => {
     if(!isInit){
       throw new Error("Axios not init!")
     }
     initStore().then(
         store => {
-          router.beforeEach((to, from, next) => {
+          /!*router.beforeEach((to, from, next) => {
             if (to.path === '/login' && to.query.code != null) {
               if(store.getters.currentPath){
                 next({name: store.getters.currentPath})
               }
               else {
-                next({name: 'home'});
+                next({name: 'homePage'});
               }
             } else {
               if(to.name && from.name){
@@ -162,20 +113,15 @@ AuthProvider.init().getAuthorization().then(auth =>{
           })
           window.onfocus = () => {
             AuthProvider.init().refreshToken()
-          }
-          new Vue({
-            router,
-            store,
-            i18n,
-            render: (h:any) => h(appComponent),
-          }).$mount('#mainDiv')
+          }*!/
+          app.mount('#app');
         }
     )
   }).catch(error =>{
     console.error("Auth not access");
     console.error(error);
   })
-})
+})*/
 
 
 

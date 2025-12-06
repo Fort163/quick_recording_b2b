@@ -4,7 +4,7 @@ import {Base} from "@/models/main";
 
 export class AuthProvider{
 
-    private baseUrl : string = process.env.VUE_APP_BASE_URL_SSO;
+    private baseUrl : string = import.meta.env.VITE_BASE_URL_SSO;
     private token : AuthToken | null = null;
     private _userInfo : Base | null = null;
     private authorization : AuthService | null = null
@@ -26,8 +26,8 @@ export class AuthProvider{
         return new Promise(((resolve, reject) => {
             const requestParams = new URLSearchParams({
                 response_type: "code",
-                client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
-                redirect_uri: process.env.VUE_APP_OAUTH_REDIRECT_URI,
+                client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+                redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
                 scope: "read.scope write.scope"
             });
             const params = new URLSearchParams(document.location.search)
@@ -37,7 +37,7 @@ export class AuthProvider{
             }
             else {
                 const location = Location.prototype;
-                window.location.href = process.env.VUE_APP_BASE_URL_SSO + process.env.VUE_APP_OAUTH_AUTHORIZE + '?' + requestParams;
+                window.location.href = import.meta.env.VITE_BASE_URL_SSO + import.meta.env.VITE_OAUTH_AUTHORIZE + '?' + requestParams;
             }
         }));
     }
@@ -80,7 +80,7 @@ export class AuthProvider{
                     }
                 }
             }
-            uninterceptedAxiosInstance.get(this.baseUrl + process.env.VUE_APP_OAUTH_LOGOUT, config
+            uninterceptedAxiosInstance.get(this.baseUrl + import.meta.env.VITE_OAUTH_LOGOUT, config
             ).then(response => {
                 console.warn(response)
                 if(response){
@@ -88,10 +88,10 @@ export class AuthProvider{
                         const payload = new FormData()
                         payload.append('token', this.token.refresh_token)
                         payload.append('token_type_hint', 'refresh_token')
-                        uninterceptedAxiosInstance.post(this.baseUrl + process.env.VUE_APP_OAUTH_REVOKE, payload, {
+                        uninterceptedAxiosInstance.post(this.baseUrl + import.meta.env.VITE_OAUTH_REVOKE, payload, {
                                 headers: {
                                     'Content-type': 'application/url-form-encoded',
-                                    'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                                    'Authorization': import.meta.env.VITE_OAUTH_AUTH_HEADER
                                 }
                             }
                         ).then(response => {
@@ -100,10 +100,10 @@ export class AuthProvider{
                                     const payload = new FormData()
                                     payload.append('token', this.token.access_token)
                                     payload.append('token_type_hint', 'access_token')
-                                    uninterceptedAxiosInstance.post(this.baseUrl + process.env.VUE_APP_OAUTH_REVOKE, payload, {
+                                    uninterceptedAxiosInstance.post(this.baseUrl + import.meta.env.VITE_OAUTH_REVOKE, payload, {
                                         headers: {
                                             'Content-type': 'application/url-form-encoded',
-                                            'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                                            'Authorization': import.meta.env.VITE_OAUTH_AUTH_HEADER
                                         }
                                     }).then(response => {
                                             this.clear()
@@ -123,13 +123,13 @@ export class AuthProvider{
         const payload = new FormData()
         payload.append('grant_type', 'authorization_code')
         payload.append('code', code)
-        payload.append('redirect_uri', process.env.VUE_APP_OAUTH_REDIRECT_URI)
-        payload.append('client_id', process.env.VUE_APP_OAUTH_CLIENT_ID)
+        payload.append('redirect_uri', import.meta.env.VITE_OAUTH_REDIRECT_URI)
+        payload.append('client_id', import.meta.env.VITE_OAUTH_CLIENT_ID)
         const uninterceptedAxiosInstance  = axios.create()
-        return uninterceptedAxiosInstance.post<AuthToken>(this.baseUrl + process.env.VUE_APP_OAUTH_TOKEN, payload, {
+        return uninterceptedAxiosInstance.post<AuthToken>(this.baseUrl + import.meta.env.VITE_OAUTH_TOKEN, payload, {
                 headers: {
                     'Content-type': 'application/url-form-encoded',
-                    'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                    'Authorization': import.meta.env.VITE_OAUTH_AUTH_HEADER
                 }
             }
         );
@@ -139,9 +139,9 @@ export class AuthProvider{
         const payload = new FormData();
         payload.append('token', token.access_token)
         const uninterceptedAxiosInstance  = axios.create()
-        return uninterceptedAxiosInstance.post<Base>(this.baseUrl + process.env.VUE_APP_OAUTH_INFO, payload, {
+        return uninterceptedAxiosInstance.post<Base>(this.baseUrl + import.meta.env.VITE_OAUTH_INFO, payload, {
             headers: {
-                'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                'Authorization': import.meta.env.VITE_OAUTH_AUTH_HEADER
             }
         })
     }
@@ -174,16 +174,16 @@ export class AuthProvider{
             setTimeout(()=>{
                 const payload = new FormData();
                 payload.append('grant_type', "refresh_token")
-                payload.append('client_id', process.env.VUE_APP_OAUTH_CLIENT_ID)
+                payload.append('client_id', import.meta.env.VITE_OAUTH_CLIENT_ID)
                 payload.append('refresh_token', <string>this.token?.refresh_token)
                 const uninterceptedAxiosInstance  = axios.create()
-                uninterceptedAxiosInstance.post<AuthToken>(this.baseUrl + process.env.VUE_APP_OAUTH_TOKEN, payload, {
+                uninterceptedAxiosInstance.post<AuthToken>(this.baseUrl + import.meta.env.VITE_OAUTH_TOKEN, payload, {
                         headers: {
                             'Content-type': 'application/url-form-encoded',
-                            'Authorization': process.env.VUE_APP_OAUTH_AUTH_HEADER
+                            'Authorization': import.meta.env.VITE_OAUTH_AUTH_HEADER
                         }
                     }
-                ).then(tokenData =>{
+                ).then((tokenData : AxiosResponse<AuthToken>) =>{
                     this.token = tokenData.data;
                     resolve(true)
                 }).catch(reason => {
